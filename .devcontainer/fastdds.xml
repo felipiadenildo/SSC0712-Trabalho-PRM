@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- .devcontainer/fastdds.xml -->
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+
+    <!-- Default profile for all participants -->
+    <participant profile_name="default_participant">
+        <rtps>
+            <!-- Optimized for localhost communication -->
+            <builtin>
+                <discovery_config>
+                    <discoveryProtocol>SERVER</discoveryProtocol>
+                    <leaseDuration>
+                        <sec>300</sec>
+                    </leaseDuration>
+                </discovery_config>
+                
+                <!-- Reduced heartbeat frequency -->
+                <readerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</readerHistoryMemoryPolicy>
+                <writerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</writerHistoryMemoryPolicy>
+            </builtin>
+            
+            <!-- TCP transport for WAN compatibility -->
+            <useBuiltinTransports>false</useBuiltinTransports>
+            <transports>
+                <transport_id>tcp</transport_id>
+            </transports>
+            
+            <!-- Optimized QoS for robotics -->
+            <propertiesPolicy>
+                <properties>
+                    <property>
+                        <name>fastdds.minimal_discovery_db</name>
+                        <value>true</value>
+                    </property>
+                </properties>
+            </propertiesPolicy>
+        </rtps>
+    </participant>
+
+    <!-- Special profile for sensor data -->
+    <data_writer profile_name="high_freq_data">
+        <qos>
+            <reliability>BEST_EFFORT</reliability>
+            <durability>VOLATILE</durability>
+            <publishMode>
+                <kind>ASYNCHRONOUS</kind>
+            </publishMode>
+        </qos>
+        <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+    </data_writer>
+
+    <!-- Profile for control commands -->
+    <data_reader profile_name="low_latency_control">
+        <qos>
+            <reliability>RELIABLE</reliability>
+            <durability>TRANSIENT_LOCAL</durability>
+        </qos>
+    </data_reader>
+
+</profiles>

@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  prm-dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    image: ssc0712-prm-dev:latest
+    container_name: prm-dev-container
+    hostname: prm-dev
+    user: ros
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      - ROS_DOMAIN_ID=42
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/ros2_ws/src/prm/.devcontainer/fastdds.xml
+      - GPU_ENABLED=${GPU_ENABLED:-true}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/dri:/dev/dri:rw
+      - /dev/shm:/dev/shm
+      - ${PWD}:/ros2_ws/src/prm:rw,cached
+      - ros2_ccache:/home/ros/.ccache
+      - ros2_dds:/home/ros/.ros
+      - ${PWD}/.devcontainer/.docker.xauth:/tmp/.docker.xauth:rw
+    networks:
+      - ros2-network
+    runtime: ${GPU_ENABLED:-true} ? nvidia : null
+    privileged: true
+    ipc: host
+    stdin_open: true
+    tty: true
+    healthcheck:
+      test: ["CMD-SHELL", "ros2 node list || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Optional additional services
+  novnc:
+    image: ghcr.io/robotical/novnc:latest
+    ports:
+      - "6080:80"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    depends_on:
+      - prm-dev
+    networks:
+      - ros2-network
+
+networks:
+  ros2-network:
+    driver: bridge
+    attachable: true
+
+volumes:
+  ros2_ccache:
+  ros2_dds:

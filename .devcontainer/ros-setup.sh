@@ -1,81 +1,80 @@
 #!/bin/bash
+# .devcontainer/ros-setup.sh
+# ROS 2 Development Environment Setup
+# Version: 2.1
+
 set -euo pipefail
 
-# ======================================
-# ROS 2 Development Container Setup
-# ======================================
+# ---- Configuration ----
+ROS_DISTRO="humble"
+WORKSPACE="/ros2_ws"
+LOG_FILE="${WORKSPACE}/setup.log"
+CACHE_DIR="/var/cache/ros"
+GPU_CHECK=true
+
+# ---- Color Definitions ----
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'
+BLUE='\033[0;34m'; NC='\033[0m'
 
 # ---- Helper Functions ----
-header() {
-    echo -e "\n${BLUE}== ${1} ==${NC}"
-}
+header() { echo -e "\n${BLUE}== ${1} ==${NC}"; }
+success() { echo -e "${GREEN}✓ ${1}${NC}"; }
+warning() { echo -e "${YELLOW}⚠ ${1}${NC}"; }
+fail() { echo -e "${RED}✗ ${1}${NC}"; exit 1; }
 
-success() {
-    echo -e "${GREEN}✓ ${1}${NC}"
-}
-
-warning() {
-    echo -e "${YELLOW}⚠ ${1}${NC}"
-}
-
-fail() {
-    echo -e "${RED}✗ ${1}${NC}"
-    exit 1
-}
-
-# ---- GPU Acceleration Check ----
+# ---- System Checks ----
 check_gpu() {
     header "GPU ACCELERATION CHECK"
-    if command -v nvidia-smi &>/dev/null; then
-        if nvidia-smi | grep -q 'NVIDIA-SMI'; then
+    if [[ "${GPU_CHECK}" != "true" ]]; then
+        warning "GPU check disabled by config"
+        return
+    fi
+
+    if lspci | grep -qi "nvidia"; then
+        if command -v nvidia-smi &>/dev/null; then
             success "NVIDIA GPU detected:"
             nvidia-smi --query-gpu=name --format=csv,noheader
+            return 0
         else
-            warning "NVIDIA driver installed but no GPU detected"
+            warning "NVIDIA GPU found but drivers not installed"
         fi
-    elif lsmod | grep -q 'nouveau'; then
-        warning "Open-source Nouveau driver detected (performance limited)"
+    fi
+    
+    warning "Using software rendering (Gazebo will be slower)"
+    export LIBGL_ALWAYS_SOFTWARE=1
+    return 1
+}
+
+# ---- FastDDS Configuration ----
+configure_fastdds() {
+    header "CONFIGURING FASTDDS"
+    local dds_conf="${WORKSPACE}/src/prm/.devcontainer/fastdds.xml"
+    
+    if [[ -f "${dds_conf}" ]]; then
+        export FASTRTPS_DEFAULT_PROFILES_FILE="${dds_conf}"
+        success "Using custom FastDDS config"
     else
-        warning "No NVIDIA GPU acceleration available"
+        warning "No custom FastDDS config found, using defaults"
     fi
 }
 
-# ---- ROS Package Validation ----
-validate_ros_packages() {
-    header "ROS PACKAGE VALIDATION"
-    local missing=0
+# ---- Workspace Setup ----
+setup_workspace() {
+    header "WORKSPACE SETUP"
     
-    while read -r pkg; do
-        if ! ros2 pkg list | grep -q "^${pkg}$"; then
-            fail "Missing required package: ${pkg}"
-            ((missing++))
-        fi
-    done < <(rosdep keys --from-paths src 2>/dev/null | grep '^ros-')
+    # Create cache directory
+    sudo mkdir -p "${CACHE_DIR}"
+    sudo chown -R ros:ros "${CACHE_DIR}"
 
-    (( missing == 0 )) && success "All ROS dependencies satisfied"
-}
+    # Source ROS environment
+    source "/opt/ros/${ROS_DISTRO}/setup.bash"
 
-# ---- Workspace Health Check ----
-health_check() {
-    header "WORKSPACE HEALTH CHECK"
-    
-    # Build check
-    if [ ! -f "install/setup.bash" ]; then
-        warning "Workspace not built - running initial build"
-        build_workspace
+    # Install dependencies
+    if ! rosdep install --from-paths src --ignore-src -y --skip-keys="gz_ros2_control"; then
+        warning "Some dependencies failed to install"
     fi
 
-    # Test file permissions
-    if [ ! -w "src" ]; then
-        fail "Workspace src directory not writable"
-    fi
-
-    success "Workspace health OK"
-}
-
-# ---- Build Function ----
-build_workspace() {
-    header "BUILDING WORKSPACE"
+    # Build workspace
     colcon build \
         --symlink-install \
         --cmake-args \
@@ -83,68 +82,39 @@ build_workspace() {
         --parallel-workers $(nproc)
 }
 
-# ---- Main Execution ----
-main() {
-    if [[ "$1" == "--quick-check" ]]; then
-        check_gpu
-        health_check
-        exit 0
-    fi
+# ---- Quick Check Mode ----
+quick_check() {
+    header "QUICK SYSTEM CHECK"
     check_gpu
-    validate_ros_packages
-    health_check
+    configure_fastdds
     
-    header "ENVIRONMENT SETUP"
-    source "/opt/ros/humble/setup.bash"
-    source "install/setup.bash" 2>/dev/null || warning "Workspace not yet built"
-
-    success "Development environment ready\n"
-    echo -e "Next steps:"
-    echo -e "  ${BLUE}1. Edit your code in src/prm/${NC}"
-    echo -e "  ${BLUE}2. Run 'colcon build' to rebuild${NC}"
-    echo -e "  ${BLUE}3. Use './run.sh' to launch simulations${NC}"
+    echo -e "\n${BLUE}=== ENVIRONMENT STATUS ===${NC}"
+    ros2 doctor || warning "ROS 2 doctor reported issues"
+    
+    success "Environment ready"
 }
 
-# Execute
-main "$@"
+# ---- Full Setup Mode ----
+full_setup() {
+    check_gpu
+    configure_fastdds
+    setup_workspace
+    
+    header "SETUP COMPLETED"
+    echo -e "${GREEN}✓ Workspace built successfully${NC}"
+    echo -e "Run ${BLUE}./run.sh${NC} to start simulation"
+}
 
-# --------------------------
-# 1. ROS Core Environment
-# --------------------------
-header "Setting up ROS 2 environment"
-step "Sourcing core ROS installation"
-source "/opt/ros/humble/setup.bash"
-
-# --------------------------
-# 2. Dependency Management
-# --------------------------
-header "Handling dependencies"
-step "Updating rosdep"
-rosdep update
-
-step "Installing workspace dependencies"
-rosdep install \
-    --from-paths src \
-    --ignore-src \
-    -y \
-    --skip-keys="gz_ros2_control"
-
-# --------------------------
-# 3. Workspace Build
-# --------------------------
-header "Building workspace"
-step "Running colcon build"
-colcon build \
-    --symlink-install \
-    --cmake-args \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    --parallel-workers $(nproc)
-
-# --------------------------
-# 4. Finalization
-# --------------------------
-header "Finalizing environment"
-step "Sourcing workspace"
-source "install/setup.bash"
-
-echo -e "\n\033[1;32m✓ Development environment ready\033[0m"
+# ---- Main Execution ----
+case "${1:-}" in
+    quick-check)
+        quick_check
+        ;;
+    full)
+        time full_setup | tee "${LOG_FILE}"
+        ;;
+    *)
+        echo "Usage: ${0} [full|quick-check]"
+        exit 1
+        ;;
+esac

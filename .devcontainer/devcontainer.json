@@ -2,12 +2,10 @@
     "name": "ROS 2 Humble PRM Project",
     "dockerFile": "../Dockerfile",
     "context": "..",
-
     // Container configuration
     "workspaceFolder": "/ros2_ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind,consistency=cached",
     "remoteUser": "ros",
-
     // Hardware and display configuration
     "runArgs": [
         "--privileged",
@@ -15,38 +13,48 @@
         "--ipc=host",
         "--gpus=all",
         "--security-opt=seccomp:unconfined",
-        "-e", "DISPLAY=${env:DISPLAY}",
-        "-e", "QT_X11_NO_MITSHM=1",
-        "-e", "XAUTHORITY=/tmp/.docker.xauth",
-        "-v", "/tmp/.X11-unix:/tmp/.X11-unix",
-        "-v", "/etc/localtime:/etc/localtime:ro"
+        "-e",
+        "DISPLAY=${env:DISPLAY}",
+        "-e",
+        "QT_X11_NO_MITSHM=1",
+        "-e",
+        "XAUTHORITY=/tmp/.docker.xauth",
+        "-v",
+        "/tmp/.X11-unix:/tmp/.X11-unix",
+        "-v",
+        "/etc/localtime:/etc/localtime:ro"
     ],
-
     // Initialization commands
     "initializeCommand": {
         "command": "sh",
-        "args": ["-c", "xhost +local: && touch ${localWorkspaceFolder}/.devcontainer/.docker.xauth && xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f ${localWorkspaceFolder}/.devcontainer/.docker.xauth nmerge -"]
+        "args": [
+            "-c",
+            "xhost +local: && touch ${localWorkspaceFolder}/.devcontainer/.docker.xauth && xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f ${localWorkspaceFolder}/.devcontainer/.docker.xauth nmerge -"
+        ]
     },
-
+    "mounts": [
+        "source=/dev/dri,target=/dev/dri,type=bind", // Better GPU passthrough
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+    ],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "LIBGL_ALWAYS_SOFTWARE": "0" // Enable hardware rendering
+    },
+    
     "postCreateCommand": [
-    // Fix permissions first
-    "sudo chown -R ros:ros /ros2_ws",
-    
-    // Then run the setup script with controlled verbosity
-    "bash -c 'source /ros2_ws/src/prm/.devcontainer/ros-setup.sh 2>&1 | tee /ros2_ws/setup.log'",
-    
-    // Final verification
-    "bash -c 'if [ -f /ros2_ws/install/setup.bash ]; then echo \"✓ Setup completed successfully\"; else echo \"! Setup failed - check /ros2_ws/setup.log\"; exit 1; fi'"
-],
-
-"postAttachCommand": "bash -c 'source /ros2_ws/src/prm/.devcontainer/ros-setup.sh --quick-check'",
-
+        // Fix permissions first
+        "sudo chown -R ros:ros /ros2_ws",
+        // Then run the setup script with controlled verbosity
+        "bash -c 'source /ros2_ws/src/prm/.devcontainer/ros-setup.sh 2>&1 | tee /ros2_ws/setup.log'",
+        // Final verification
+        "bash -c 'if [ -f /ros2_ws/install/setup.bash ]; then echo \"✓ Setup completed successfully\"; else echo \"! Setup failed - check /ros2_ws/setup.log\"; exit 1; fi'"
+    ],
+    "postAttachCommand": "bash -c 'source /ros2_ws/src/prm/.devcontainer/ros-setup.sh --quick-check'",
     // Port forwarding for web tools
     "forwardPorts": [
-        6080,  // For noVNC if needed
-        8888   // For Jupyter notebooks
+        6080, // For noVNC if needed
+        8888 // For Jupyter notebooks
     ],
-
     // Customizations
     "customizations": {
         "vscode": {
@@ -56,7 +64,10 @@
                 "python.linting.flake8Enabled": true,
                 "python.linting.pylintEnabled": false,
                 "python.formatting.provider": "black",
-                "python.formatting.blackArgs": ["--line-length", "120"],
+                "python.formatting.blackArgs": [
+                    "--line-length",
+                    "120"
+                ],
                 "python.analysis.extraPaths": [
                     "/opt/ros/humble/lib/python3.10/site-packages",
                     "/ros2_ws/install/prm/lib/python3.10/site-packages"
@@ -74,7 +85,10 @@
                 "terminal.integrated.profiles.linux": {
                     "ros": {
                         "path": "bash",
-                        "args": ["-ic", "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && cd /ros2_ws && bash"]
+                        "args": [
+                            "-ic",
+                            "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && cd /ros2_ws && bash"
+                        ]
                     }
                 }
             },
@@ -92,7 +106,6 @@
             ]
         }
     },
-
     // Features to install (Docker-in-Docker, etc)
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
