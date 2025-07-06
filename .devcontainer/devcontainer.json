@@ -1,0 +1,105 @@
+{
+    "name": "ROS 2 Humble PRM Project",
+
+    // Constrói a imagem a partir do Dockerfile otimizado.
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": ".."
+    },
+
+    // Comando a ser executado no seu computador HOST ANTES de criar o contêiner.
+    // Isso automatiza a permissão para a interface gráfica.
+    "initializeCommand": "xhost +local:",
+
+    // Argumentos para a execução do contêiner.
+    "runArgs": [
+        // Habilita aceleração por hardware da NVIDIA de forma segura.
+        "--gpus=all",
+        // Melhora o desempenho de aplicações gráficas.
+        "--ipc=host",
+        // Permite que o contêiner acesse a rede do host diretamente.
+        "--net=host",
+        // Encaminha a variável de ambiente DISPLAY para o contêiner.
+        "-e", "DISPLAY=${env:DISPLAY}",
+        // Monta o soquete do servidor X11 para permitir que as GUIs apareçam na sua tela.
+        "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+    ],
+
+    // Monta o seu código-fonte local dentro do contêiner.
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind"
+    ],
+
+    // Define o diretório de trabalho padrão dentro do contêiner.
+    "workspaceFolder": "/ros2_ws",
+
+    // Comando executado automaticamente DENTRO do contêiner APÓS sua criação.
+    "postCreateCommand": "bash -c 'source /opt/ros/humble/setup.bash && colcon build --symlink-install'",
+
+    // --- Customizações do Ambiente de Desenvolvimento VS Code ---
+    "customizations": {
+        "vscode": {
+            // Instala extensões essenciais para o desenvolvimento ROS, Python e C++.
+            "extensions": [
+                // Essenciais para ROS
+                // "ms-iot.vscode-ros",
+                // "ms-vscode.cpptools-extension-pack",
+                "ms-python.python",
+                
+                // Qualidade de Código e Formatação
+                "ms-python.black-formatter", // Formatador padrão para Python
+                // "ms-python.isort",           // Organiza os imports do Python
+                "ms-python.flake8",          // Linter para encontrar erros no Python
+                
+                // Ferramentas de Edição
+                "redhat.vscode-xml",         // Para editar .launch, .xacro, .sdf, package.xml
+                "redhat.vscode-yaml"       // Para editar arquivos de configuração .yaml
+                // "yzhang.markdown-all-in-one",// Tudo que você precisa para editar READMEs
+                
+                // Controle de Versão
+                // "eamodio.gitlens"            // Superpoderes para o Git
+            ],
+            
+            // Configurações padrão do VS Code para este workspace.
+            "settings": {
+                // --- Configurações Python ---
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.analysis.autoSearchPaths": true,
+                "python.analysis.extraPaths": [
+                    "/ros2_ws/install/prm/lib/python3.10/site-packages",
+                    "/opt/ros/humble/lib/python3.10/site-packages",
+                    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+                ],
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                "flake8.args": ["--max-line-length=120"],
+
+                // --- Configurações ROS ---
+                "ros.distro": "humble",
+
+                // --- Configurações de Arquivos ---
+                "files.associations": {
+                    "*.world": "xml",
+                    "*.sdf": "xml",
+                    "*.xacro": "xml",
+                    "*.urdf": "xml"
+                },
+
+                // --- Configurações do Terminal ---
+                // Garante que o terminal integrado já venha com o ambiente ROS "sourceado".
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash",
+                        "args": ["-c", "source /ros2_ws/install/setup.bash && bash"]
+                    }
+                }
+            }
+        }
+    }
+}
