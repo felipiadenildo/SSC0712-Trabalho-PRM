@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y \
     terminator \
     mesa-utils \
     libgl1-mesa-glx \
+    ros-${ROS_DISTRO}-ros-gz-bridge \
+    ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    dbus-x11 \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Configuração do usuário
@@ -24,15 +28,29 @@ USER ros
 WORKDIR /ros2_ws
 
 # Configuração do ambiente
+RUN mkdir -p ~/.config/terminator && \
+    cat > ~/.config/terminator/config <<EOL
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+    [[[window0]]]
+      type = Window
+      parent = ""
+EOL
+
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc && \
     echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc && \
     echo "export GAZEBO_MODEL_PATH=/ros2_ws/src/prm/models:\${GAZEBO_MODEL_PATH}" >> ~/.bashrc && \
+    echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
     echo "alias build='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo'" >> ~/.bashrc
 
 # Configuração dos scripts
-RUN mkdir -p /home/ros/scripts
 COPY --chown=ros:ros .devcontainer/setup-env.sh .devcontainer/run-app.sh /home/ros/scripts/
-RUN sudo chmod +x /home/ros/scripts/*.sh
+RUN sudo chmod +x /home/ros/scripts/*.sh && \
+    sudo chown -R ros:ros /home/ros/scripts
+
 ENV PATH="/home/ros/scripts:${PATH}"
 
 # Ponto de entrada padrão

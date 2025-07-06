@@ -1,31 +1,45 @@
 #!/bin/bash
 
-# Cores
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+# Configurações globais
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m'
 
-# Configurações
-TERMINAL="terminator --layout=grid -e"
-WORKSPACE="/ros2_ws"
-LAUNCH_PACKAGE="prm"
+readonly TERMINAL="terminator --layout=grid -e"
+readonly WORKSPACE="/ros2_ws"
+readonly LAUNCH_PACKAGE="prm"
+readonly SOURCE_CMD="source ${WORKSPACE}/install/setup.bash"
 
+# Funções principais
 start_process() {
     local name=$1
     local command=$2
     local color=$3
     
     echo -e "${color}Iniciando ${name}...${NC}"
-    $TERMINAL "bash -c 'source ${WORKSPACE}/install/setup.bash && ${command}; bash'" &
+    ${TERMINAL} "bash -c '${SOURCE_CMD} && ${command}; bash'" &
 }
 
 stop_processes() {
+    local processes=("ros2 launch" "gzserver" "terminator")
+    
     echo -e "${RED}Parando todos os processos...${NC}"
-    pkill -f "ros2 launch" && echo "Processos ROS finalizados"
-    pkill -f gzserver && echo "Processos Gazebo finalizados"
-    pkill -f terminator && echo "Terminais fechados"
+    for proc in "${processes[@]}"; do
+        pkill -f "${proc}" && echo "Processos ${proc} finalizados"
+    done
 }
+
+show_usage() {
+    echo -e "${BLUE}Uso:${NC} $0 [comando]"
+    echo -e "Comandos disponíveis:"
+    echo -e "  ${GREEN}sim${NC}     - Inicia simulação Gazebo"
+    echo -e "  ${BLUE}ctrl${NC}    - Inicia controle do robô"
+    echo -e "  ${RED}kill${NC}    - Para todos os processos"
+}
+
+# Main execution
+source "${WORKSPACE}/install/setup.bash"
 
 case "$1" in
     sim|simulation)
@@ -38,10 +52,7 @@ case "$1" in
         stop_processes
         ;;
     *)
-        echo -e "${BLUE}Uso:${NC} $0 [comando]"
-        echo -e "Comandos disponíveis:"
-        echo -e "  ${GREEN}sim${NC}     - Inicia simulação Gazebo"
-        echo -e "  ${BLUE}ctrl${NC}    - Inicia controle do robô"
-        echo -e "  ${RED}kill${NC}    - Para todos os processos"
+        show_usage
+        exit 1
         ;;
 esac

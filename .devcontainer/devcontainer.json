@@ -10,17 +10,19 @@
         "--net=host",
         "--ipc=host",
         "--gpus=all",
-        "-e", "DISPLAY=${env:DISPLAY}",
-        "-e", "NVIDIA_DRIVER_CAPABILITIES=all",
-        "-e", "VGL_DISPLAY=:0",
-        "-v", "/tmp/.X11-unix:/tmp/.X11-unix:rw",
-        "-v", "/dev/dri:/dev/dri:rw"
+        "--env=NVIDIA_DRIVER_CAPABILITIES=all",
+        "--env=DISPLAY=${localEnv:DISPLAY}",
+        "--env=TERM=xterm-256color",
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
+        "--volume=/run/user/$(id -u):/run/user/$(id -u)"
     ],
 
     "containerEnv": {
         "GAZEBO_VERSION": "garden",
         "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
-        "TERM": "xterm-256color"
+        "LIBGL_ALWAYS_INDIRECT": "1",
+        "GALLIUM_DRIVER": "llvmpipe",
+        "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/$(id -u)/bus"
     },
 
     "postCreateCommand": "/home/ros/scripts/setup-env.sh",
@@ -29,12 +31,15 @@
         "vscode": {
             "extensions": [
                 "ms-python.python",
-                "ms-iot.vscode-ros",
-                "redhat.vscode-xml"
+                "ms-iot.vscode-ros", 
+                "redhat.vscode-xml",
+                "dotdotdotdot.alignment"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/usr/bin/python3",
-                "editor.formatOnSave": true
+                "editor.formatOnSave": true,
+                "ros.distro": "humble",
+                "xml.server.enabled": true
             }
         }
     }
