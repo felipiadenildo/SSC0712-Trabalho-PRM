@@ -1,10 +1,13 @@
 #!/bin/bash
 set -e
 
-# Configura o ambiente do ROS 2
-source /opt/ros/humble/setup.bash
-# Configura o ambiente do seu workspace
-source /ros2_ws/install/setup.bash
+# Health checks first
+if ! nvidia-smi &>/dev/null; then
+    echo "WARNING: GPU acceleration not detected" >&2
+fi
 
-# Executa o comando que foi passado para o contêiner (ex: 'bash', 'ros2 launch ...')
+# Then source environments
+[ -f "/opt/ros/humble/setup.bash" ] && source "/opt/ros/humble/setup.bash"
+[ -f "/ros2_ws/install/setup.bash" ] && source "/ros2_ws/install/setup.bash"
+
 exec "$@"
