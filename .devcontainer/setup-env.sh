@@ -58,3 +58,7 @@ echo -e "Comandos disponíveis:"
 echo -e "  ${YELLOW}run-app.sh sim${NC}    - Inicia simulação"
 echo -e "  ${YELLOW}run-app.sh ctrl${NC}   - Inicia controle"
 echo -e "  ${YELLOW}run-app.sh kill${NC}   - Para todos os processos"
+
+echo -e "\n# Alias para run-app.sh" >> ~/.bashrc
+echo 'alias rosapp="/ros2_ws/src/prm/.devcontainer/run-app.sh"' >> ~/.bashrc
+source ~/.bashrc  

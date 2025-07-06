@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     mesa-utils \
     libgl1-mesa-glx \
     ros-${ROS_DISTRO}-ros-gz-bridge \
+    ros-${ROS_DISTRO}-ros-gz-sim \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
     dbus-x11 \
     libglib2.0-0 \
