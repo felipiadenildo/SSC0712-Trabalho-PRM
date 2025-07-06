@@ -1,10 +1,9 @@
 {
-    "name": "ROS 2 Humble PRM Project",
-    "dockerFile": "../Dockerfile",
+    "name": "ROS 2 Humble - Ambiente Otimizado",
+    "dockerFile": "Dockerfile",
     "context": "..",
     "workspaceFolder": "/ros2_ws",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind,consistency=cached",
-    "remoteUser": "ros",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind",
 
     "runArgs": [
         "--privileged",
@@ -12,78 +11,31 @@
         "--ipc=host",
         "--gpus=all",
         "-e", "DISPLAY=${env:DISPLAY}",
-        "-e", "QT_X11_NO_MITSHM=1",
-        "-e", "XAUTHORITY=/tmp/.Xauthority",
+        "-e", "NVIDIA_DRIVER_CAPABILITIES=all",
+        "-e", "VGL_DISPLAY=:0",
         "-v", "/tmp/.X11-unix:/tmp/.X11-unix:rw",
-        "-v", "${localEnv:HOME}/.Xauthority:/tmp/.Xauthority:rw",
         "-v", "/dev/dri:/dev/dri:rw"
     ],
 
     "containerEnv": {
-        "DISPLAY": "${localEnv:DISPLAY}",
-        "LIBGL_ALWAYS_SOFTWARE": "0",
-        "NVIDIA_DRIVER_CAPABILITIES": "all",
-        "SHELL": "/bin/bash"
+        "GAZEBO_VERSION": "garden",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+        "TERM": "xterm-256color"
     },
+
+    "postCreateCommand": "/home/ros/scripts/setup-env.sh",
 
     "customizations": {
         "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "ros",
-                "terminal.integrated.profiles.linux": {
-                    "bash": {
-                        "path": "bash",
-                        "args": ["-i"]
-                    },
-                    "ros": {
-                        "path": "bash",
-                        "args": [
-                            "-ic",
-                            "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && cd /ros2_ws && exec bash"
-                        ]
-                    }
-                },
-                "python.defaultInterpreterPath": "/usr/bin/python3",
-                "python.linting.enabled": true,
-                "python.linting.flake8Enabled": true,
-                "python.formatting.provider": "black",
-                "python.formatting.blackArgs": ["--line-length", "120"],
-                "python.analysis.extraPaths": [
-                    "/opt/ros/humble/lib/python3.10/site-packages",
-                    "/ros2_ws/install/prm/lib/python3.10/site-packages"
-                ],
-                "ros.distro": "humble",
-                "editor.formatOnSave": true,
-                "files.associations": {
-                    "*.launch.py": "python",
-                    "*.world": "xml",
-                    "*.sdf": "xml",
-                    "*.xacro": "xml",
-                    "*.urdf": "xml"
-                }
-            },
             "extensions": [
                 "ms-python.python",
-                "ms-python.vscode-pylance",
-                "ms-python.black-formatter",
-                "ms-python.flake8",
-                "redhat.vscode-yaml",
-                "redhat.vscode-xml",
-                "twxs.cmake",
-                "ms-vscode.cpptools"
-            ]
-        }
-    },
-
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {
-            "version": "latest",
-            "moby": true
-        },
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "username": "ros",
-            "upgradePackages": false,
-            "configureZshAsDefaultShell": false
+                "ms-iot.vscode-ros",
+                "redhat.vscode-xml"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "editor.formatOnSave": true
+            }
         }
     }
 }
