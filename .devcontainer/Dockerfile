@@ -13,9 +13,12 @@ RUN apt-get update && apt-get install -y \
     terminator \
     mesa-utils \
     libgl1-mesa-glx \
+    libgl1-mesa-dri \
     ros-${ROS_DISTRO}-ros-gz-bridge \
     ros-${ROS_DISTRO}-ros-gz-sim \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    ros-${ROS_DISTRO}-xacro \
+    ros-${ROS_DISTRO}-topic-tools \
     dbus-x11 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
