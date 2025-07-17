@@ -27,8 +27,9 @@ RUN apt-get update && apt-get install -y \
     # Limpa o cache do apt para reduzir o tamanho da imagem
     && rm -rf /var/lib/apt/lists/*
 
-# Inicializa o rosdep para que esteja pronto para uso
-RUN rosdep init && rosdep update
+# Inicializa o rosdep system-wide (como root).
+# O '|| true' previne erros se a imagem base já tiver feito isso.
+RUN rosdep init || true
 
 # Cria um usuário 'ros' para não rodar como root
 # Adiciona o usuário aos grupos 'sudo' (para permissões de admin) e 'video' (para acesso a hardware gráfico)
@@ -41,17 +42,22 @@ USER ros
 # Define o diretório de trabalho padrão para o usuário 'ros'
 WORKDIR /home/ros
 
+# **AGORA, atualiza o rosdep como o usuário 'ros'**
+# Isso cria o cache no lugar certo: /home/ros/.ros/
+RUN rosdep update
+
 # Cria a estrutura do workspace
 RUN mkdir -p /home/ros/ros2_ws/src
 
 # Configura o ambiente no .bashrc
 # Isso garante que todo novo terminal aberto terá o ambiente ROS configurado
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc && \
-    # NOTA: A linha para o workspace local foi movida para ser adicionada após a compilação
+    echo "alias runapp='/home/ros/scripts/run-app.sh'" >> ~/.bashrc && \
     echo "alias build='colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo'" >> ~/.bashrc && \
     echo "alias s_ws='source /home/ros/ros2_ws/install/setup.bash'" >> ~/.bashrc && \
     echo "export GAZEBO_MODEL_PATH=/home/ros/ros2_ws/src/prm/models:\${GAZEBO_MODEL_PATH}" >> ~/.bashrc && \
-    echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc
+    echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
+    echo "if [ -f /home/ros/ros2_ws/install/setup.bash ]; then source /home/ros/ros2_ws/install/setup.bash; fi" >> ~/.bashrc
 
 # Copia os scripts de execução para dentro do contêiner
 # O --chown garante que o usuário 'ros' seja o dono dos arquivos

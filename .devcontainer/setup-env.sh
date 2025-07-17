@@ -64,7 +64,7 @@ setup_workspace() {
 
     log_info "Construindo o workspace com colcon..."
     # Compila o projeto. O alias 'build' foi definido no Dockerfile.
-    build
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
     if [ $? -ne 0 ]; then
         log_error "Falha na compilação do workspace. Verifique os erros acima."
         exit 1
@@ -86,9 +86,12 @@ source /opt/ros/humble/setup.bash
 
 setup_workspace
 
-log_info "Ambiente configurado com sucesso!"
-echo -e "Use o alias ${YELLOW}rosapp${NC} para executar a aplicação (ex: rosapp sim)"
+log_info "Ambiente ROS 2 configurado com sucesso!"
+echo -e "Comandos disponíveis:"
+echo -e "  ${YELLOW}run-app.sh sim${NC}    - Inicia simulação"
+echo -e "  ${YELLOW}run-app.sh ctrl${NC}   - Inicia controle"
+echo -e "  ${YELLOW}run-app.sh kill${NC}   - Para todos os processos"
 
-# Executa qualquer comando passado como argumento para este script
-# Isso permite encadear comandos, como: ./setup-env.sh rosapp sim
-exec "$@"
+echo -e "\n# Alias para run-app.sh" >> ~/.bashrc
+echo 'alias rosapp="/ros2_ws/src/prm/.devcontainer/run-app.sh"' >> ~/.bashrc
+source ~/.bashrc  
