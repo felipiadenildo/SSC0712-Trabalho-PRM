@@ -1,135 +1,118 @@
-```markdown
-# Guia Completo de Configuração ROS 2 no Windows (WSL2 + Docker)
+# Guia de Configuração e Execução: ROS 2 com Docker e WSL2
 
-## 🔧 1. Pré-requisitos Essenciais
+Este guia detalha o processo completo para configurar e executar este projeto ROS 2 em um ambiente Windows, utilizando o WSL2 (Subsistema do Windows para Linux) e Docker.
 
-### 1.1 Ativação do WSL2 (PowerShell Admin)
-```powershell
-# Executar como Administrador
-wsl --install
-wsl --set-default-version 2
-wsl --shutdown
-```
+---
 
-### 1.2 Instalação do Docker Desktop
-1. Baixe o [Docker Desktop for Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
-2. Após instalação:
-   - Ative **WSL2 backend**:  
-     `Settings > General > Use WSL2 based engine`
-   - Configure integração:  
-     `Settings > Resources > WSL Integration > Ativar sua distro (ex: Ubuntu-22.04)`
+## 🏁 Parte 1: Configuração do Ambiente Windows (Apenas uma vez)
 
-### 1.3 Instalação do Ubuntu 22.04
-1. Abra a Microsoft Store e pesquise "Ubuntu 22.04 LTS"
-2. Clique em "Instalar"
-3. Ao concluir, inicie pelo Menu Iniciar e:
-   ```bash
-   # Na primeira execução:
-   Digite novo nome de usuário UNIX: [seu_user]
-   New password: [sua_senha]
-   Confirm password: [sua_senha]
-   ```
+Estes passos preparam seu computador para rodar o projeto. Você só precisa fazê-los uma única vez.
 
-### 1.4 Configuração do X Server (VcXsrv)
-1. Baixe e instale o [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
-2. Inicie o **XLaunch** (via Menu Iniciar) e configure:
-   - Display settings: "Multiple windows" (Display number: `-1`)
-   - Client startup: Marque "Disable access control"
-   - Extra settings: Deixe os padrões
-3. Salve a configuração (opcional)
+### 1.1. Instalar e Ativar o WSL2
 
-## 🛠️ 2. Configuração do Ambiente WSL2
+O WSL2 permite executar um ambiente Linux diretamente no Windows.
 
-### 2.1 Configuração do `.bashrc`
-```bash
-# Adicione ao final do arquivo ~/.bashrc:
-echo -e "\n# Configurações ROS\n" >> ~/.bashrc
-echo "export DISPLAY=\$(awk '/nameserver / {print \$2}' /etc/resolv.conf):0" >> ~/.bashrc
-echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc
-echo "export GTK_IM_MODULE=ibus" >> ~/.bashrc  # Para input methods
-source ~/.bashrc
-```
+1.  Abra o **PowerShell como Administrador**.
+2.  Execute o seguinte comando para instalar o WSL2 e a distribuição Ubuntu 22.04:
+    ```powershell
+    wsl --install -d Ubuntu-22.04
+    ```
+3.  Reinicie o seu computador quando solicitado.
+4.  Após reiniciar, o terminal do Ubuntu será aberto. Crie um nome de usuário e uma senha para o seu ambiente Linux.
 
-## 🐋 3. Configuração do Projeto
+### 1.2. Instalar o Docker Desktop
 
-### 3.1 Clone do Repositório
-```bash
-git clone https://github.com/felipiadenildo/SSC0712-Trabalho-PRM.git
-cd SSC0712-Trabalho-PRM
-```
+O Docker irá gerenciar nosso ambiente de desenvolvimento isolado (contêiner).
 
-### 3.2 Permissões de Execução
-```bash
-chmod +x .devcontainer/*.sh
-```
+1.  Baixe e instale o [Docker Desktop for Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe).
+2.  Durante a instalação, certifique-se de que a opção **"Use WSL 2 based engine"** esteja marcada.
+3.  Após a instalação, abra o Docker Desktop, vá para **Settings > Resources > WSL Integration** e ative a integração para a sua distribuição `Ubuntu-22.04`.
 
-## 💻 4. Configuração do VS Code
+### 1.3. Instalar um X Server (VcXsrv)
 
-1. Instale as extensões essenciais:
-   - Remote - WSL
-   - ROS (by Microsoft)
-   - Python (by Microsoft)
-2. Abra o projeto no WSL:
-   - `Ctrl+Shift+P` > "Remote-WSL: Reopen Folder in WSL"
-3. Rebuild do container:
-   - `Ctrl+Shift+P` > "Dev Containers: Rebuild Container"
+Aplicações com interface gráfica (GUI) como o Gazebo e o RViz, que rodam no Linux (dentro do Docker), precisam de um "servidor de janelas" no Windows para serem exibidas.
 
-## 🚀 5. Execução do Projeto
+1.  Baixe e instale o [VcXsrv](https://sourceforge.net/projects/vcxsrv/).
+2.  Inicie o **XLaunch** pelo Menu Iniciar e configure-o da seguinte forma:
+    * **Display settings**: Selecione "Multiple windows" e deixe o "Display number" como `-1`.
+    * **Client startup**: Selecione "Start no client".
+    * **Extra settings**: Marque as opções **"Clipboard"**, **"Primary Selection"** e, o mais importante, **"Disable access control"**.
+3.  Conclua a configuração. Um ícone do VcXsrv aparecerá na sua bandeja do sistema, indicando que ele está em execução.
 
-### 5.1 Iniciar Simulação
-```bash
-./run-app.sh sim
-# Verifique no VcXsrv a janela do Gazebo
-```
+### 1.4. Instalar e Configurar o VS Code
 
-### 5.2 Iniciar Controle
-```bash
-./run-app.sh ctrl
-```
+O VS Code é o editor que usaremos para desenvolver e interagir com o contêiner.
 
-### 5.3 Parar Todos os Processos
-```bash
-./run-app.sh kill
-```
+1.  Instale o [Visual Studio Code](https://code.visualstudio.com/).
+2.  Dentro do VS Code, vá para a aba de Extensões (`Ctrl+Shift+X`) e instale a extensão **"WSL"** da Microsoft.
 
-## 🔍 6. Troubleshooting Detalhado
+---
 
-### 6.1 Problemas Comuns
-| Sintoma | Solução |
-|---------|---------|
-| Gazebo não abre | Verifique se o VcXsrv está rodando e firewall desativado |
-| Erros de GPU | Execute `nvidia-smi` no WSL para verificar drivers |
-| DBUS errors | Reinicie o container com `docker-compose down && docker-compose up` |
+## 🚀 Parte 2: Executando o Projeto
 
-### 6.2 Verificação de Ambiente
-```bash
-# Teste X11 forwarding:
-xeyes
+Com o ambiente configurado, siga estes passos para executar o projeto.
 
-# Verifique GPU:
-glxinfo | grep "OpenGL renderer"
+### 2.1. Abrir o Projeto no WSL
 
-# Verifique variáveis críticas:
-printenv | grep -E 'DISPLAY|LIBGL|DBUS'
-```
+1.  Abra seu terminal **Ubuntu** (pelo Menu Iniciar).
+2.  Clone o repositório para dentro do seu ambiente WSL:
+    ```bash
+    git clone [https://github.com/felipiadenildo/SSC0712-Trabalho-PRM.git](https://github.com/felipiadenildo/SSC0712-Trabalho-PRM.git)
+    cd SSC0712-Trabalho-PRM
+    ```
+3.  Abra o projeto no VS Code:
+    ```bash
+    code .
+    ```
+    O VS Code será iniciado no Windows, mas conectado ao seu sistema de arquivos Linux.
 
-## 📌 7. Notas Finais
+### 2.2. Iniciar o Ambiente de Desenvolvimento (Dev Container)
 
-- **Performance**: Para melhor desempenho com GPU NVIDIA:
-  ```bash
-  export __NV_PRIME_RENDER_OFFLOAD=1
-  export __GLX_VENDOR_LIBRARY_NAME=nvidia
-  ```
+O VS Code detectará a pasta `.devcontainer` e sugerirá reabrir o projeto em um contêiner.
 
-- **Atualização**: Sempre execute no WSL:
-  ```bash
-  sudo apt update && sudo apt upgrade -y
-  ```
+1.  Um pop-up aparecerá no canto inferior direito. Clique em **"Reopen in Container"**.
+2.  Aguarde enquanto o Docker constrói a imagem e inicia o contêiner. Este processo pode demorar alguns minutos na primeira vez.
+3.  Quando terminar, o VS Code estará conectado diretamente ao seu ambiente de desenvolvimento ROS 2, pronto para uso.
 
-- **Problemas persistentes?** Recrie todo o ambiente:
-  ```powershell
-  wsl --unregister Ubuntu-22.04
-  wsl --install
-  ```
+### 2.3. Compilar e Executar a Aplicação
 
-Este guia cobre todos os passos desde a instalação até a execução estável no Windows, incluindo soluções para os problemas mais comuns. Todos os comandos foram testados em ambiente Windows 10/11 com WSL2.
+Agora, com tudo pronto, vamos compilar e rodar a simulação.
+
+1.  Abra um novo terminal dentro do VS Code (`Ctrl+'` ou `Terminal > New Terminal`). Você já estará dentro do contêiner.
+2.  **Execute o script de configuração e compilação.** Este script instala as dependências do ROS e compila seu código.
+    ```bash
+    # Dentro do terminal do VS Code (no contêiner)
+    ./.devcontainer/setup-env.sh
+    ```
+3.  **Ative o ambiente do seu workspace.** Após a compilação, você precisa "ativar" os pacotes que foram criados.
+    ```bash
+    source install/setup.bash
+    ```
+    > **Dica:** O alias `s_ws` foi criado para fazer isso mais rápido. Você pode digitar apenas `s_ws`.
+
+4.  **Execute a aplicação usando o script de controle:**
+    * Para iniciar a simulação (Gazebo):
+        ```bash
+        run-app.sh sim
+        ```
+    * Para iniciar os nós de controle (RViz, etc.):
+        ```bash
+        run-app.sh ctrl
+        ```
+    * Para parar todos os processos:
+        ```bash
+        run-app.sh kill
+        ```
+
+---
+
+## 🔍 Solução de Problemas (Troubleshooting)
+
+* **Erro `command not found: run-app.sh`:** Você esqueceu de rodar `source install/setup.bash` (ou o alias `s_ws`) no seu terminal.
+* **Janelas do Gazebo/RViz não abrem:**
+    1.  Verifique se o **VcXsrv** está em execução no Windows.
+    2.  Confirme se a opção **"Disable access control"** foi marcada durante a configuração do VcXsrv.
+    3.  Verifique se o seu Firewall do Windows não está bloqueando a conexão.
+* **Problemas persistentes e inexplicáveis:** O ambiente Docker pode ter se corrompido. A solução mais rápida é reconstruí-lo:
+    1.  No VS Code, pressione `Ctrl+Shift+P`.
+    2.  Digite e selecione **"Dev Containers: Rebuild Container"**.
