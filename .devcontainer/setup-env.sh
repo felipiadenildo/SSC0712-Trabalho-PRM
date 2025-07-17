@@ -45,6 +45,9 @@ setup_workspace() {
     fi
 }
 
+sudo rosdep init
+rosdep update
+
 # --- Execução Principal ---
 check_gpu
 
