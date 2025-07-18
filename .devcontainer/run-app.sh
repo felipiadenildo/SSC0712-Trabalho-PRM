@@ -2,10 +2,9 @@
 # Painel de Controle Avançado para o Ambiente de Desenvolvimento ROS 2.
 # Este script automatiza a compilação, atualização, execução e finalização
 # de todos os componentes do projeto, utilizando o 'terminator' para
-# organizar os processos em painéis de terminal separados.
+# organizar os processos em abas de terminal separadas.
 
 # --- Configurações Globais ---
-# Usar 'readonly' torna as variáveis imutáveis, evitando alterações acidentais.
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
@@ -29,7 +28,6 @@ func_build() {
 func_update_deps() {
     echo -e "${YELLOW}=== Atualizando Dependências (rosdep) ===${NC}"
     cd "${WORKSPACE}"
-    # Fonteia o ambiente ROS base para garantir que rosdep seja encontrado.
     source /opt/ros/humble/setup.bash
     rosdep install --from-paths src -i -y --ignore-src
     echo -e "${GREEN}Dependências atualizadas!${NC}"
@@ -37,30 +35,31 @@ func_update_deps() {
 
 # INICIA a aplicação completa em um layout de terminais separados.
 func_start() {
-    # Verifica se o workspace foi compilado antes de tentar executar.
     if [ ! -f "${WORKSPACE}/install/setup.bash" ]; then
         echo -e "${RED}Erro: O workspace ainda não foi compilado.${NC}"
         echo -e "Execute o comando '${YELLOW}runapp build${NC}' primeiro."
         exit 1
     fi
 
-    echo -e "${GREEN}🚀 Iniciando aplicação completa em um novo layout do Terminator...${NC}"
+    echo -e "${GREEN}🚀 Iniciando aplicação completa em abas do Terminator...${NC}"
 
-    # Define o comando de 'sourcing' que será prefixado em cada comando ROS.
     local source_cmd="source /opt/ros/humble/setup.bash && source ${WORKSPACE}/install/setup.bash"
 
-    # Utiliza o Terminator para criar um layout com 3 painéis, cada um com uma tarefa.
-    # O 'bash -c "..."' é usado para encadear comandos em cada painel.
-    # O 'exec bash' no final mantém o painel aberto e interativo após o processo terminar.
-    terminator -e "bash -c '${source_cmd}; echo \"Pane 1: Simulação (Gazebo)\"; ros2 launch ${PACKAGE_NAME} inicia_simulacao.launch.py; exec bash'" \
-               --new-tab -e "bash -c '${source_cmd}; echo \"Pane 2: Planejador de Caminhos\"; sleep 5; ros2 run ${PACKAGE_NAME} path_planner_node; exec bash'" \
-               --new-tab -e "bash -c '${source_cmd}; echo \"Pane 3: Máquina de Estados\"; sleep 5; ros2 run ${PACKAGE_NAME} state_machine_node; exec bash'"
+    # ======================= INÍCIO DA CORREÇÃO =======================
+    # Voltando a usar '--new-tab', que é compatível com a versão do Terminator instalada.
+    # O erro gráfico que causava problemas com este método já foi corrigido no Dockerfile.
+    terminator \
+        -T "Aba 1: Simulação (Gazebo)" -e "bash -c '${source_cmd}; ros2 launch ${PACKAGE_NAME} inicia_simulacao.launch.py; exec bash'" \
+        --new-tab \
+        -T "Aba 2: Planejador de Caminhos" -e "bash -c '${source_cmd}; sleep 8; ros2 run ${PACKAGE_NAME} path_planner_node; exec bash'" \
+        --new-tab \
+        -T "Aba 3: Máquina de Estados" -e "bash -c '${source_cmd}; sleep 8; ros2 run ${PACKAGE_NAME} state_machine_node; exec bash'"
+    # ======================== FIM DA CORREÇÃO =========================
 }
 
 # PARA todos os processos relacionados à aplicação.
 func_stop() {
     echo -e "${RED}=== Parando todos os processos da aplicação ===${NC}"
-    # O '|| true' evita que o script pare se um processo não for encontrado.
     pkill -f terminator || true
     pkill -f "gz sim" || true
     pkill -f "ros2 launch ${PACKAGE_NAME}" || true
@@ -101,14 +100,11 @@ func_usage() {
 }
 
 # --- Roteador Principal de Comandos ---
-
-# Se nenhum comando for fornecido, mostra o menu de ajuda.
 if [ $# -eq 0 ]; then
     func_usage
     exit 0
 fi
 
-# Roteia o primeiro argumento ($1) para a função correspondente.
 case "$1" in
     start)
         func_start

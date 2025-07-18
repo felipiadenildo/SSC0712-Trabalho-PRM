@@ -8,6 +8,9 @@ FROM osrf/ros:${ROS_DISTRO}-desktop
 # Define uma variável de ambiente para evitar que pacotes como o 'tzdata'
 # peçam inputs interativos durante a instalação.
 ENV DEBIAN_FRONTEND=noninteractive
+# Desativa o uso da extensão de memória compartilhada (MIT-SHM) para o X11.
+# Isso resolve erros de 'BadAccess' ao rodar aplicações com GUI em certos sistemas.
+ENV QT_X11_NO_MITSHM=1
 
 # Bloco de instalação de dependências.
 # 'apt-get update' atualiza a lista de pacotes disponíveis.
@@ -99,14 +102,16 @@ RUN echo "" >> ~/.bashrc && \
 # O '--chown' garante que o usuário 'ros' seja o dono dos arquivos copiados.
 COPY --chown=ros:ros .devcontainer/setup-env.sh .devcontainer/run-app.sh /home/ros/scripts/
 # Dá permissão de execução para todos os scripts na pasta.
-RUN sudo chmod +x /home/ros/scripts/*.sh
+RUN chmod +x /home/ros/scripts/*.sh
+# Define diretório de trabalho
+WORKDIR /home/ros/ros2_ws
 
 # Adiciona a pasta de scripts ao PATH do sistema.
 # Isso permite que os scripts (como 'run-app.sh') sejam chamados de qualquer diretório.
 ENV PATH="/home/ros/scripts:${PATH}"
 
 # Define o diretório de trabalho final para a raiz do workspace.
-WORKDIR /home/ros/ros2_ws
+# WORKDIR /home/ros/ros2_ws
 
 # Comando padrão que o contêiner executa ao iniciar.
 # 'tail -f /dev/null' é um truque para manter o contêiner rodando indefinidamente em segundo plano.

@@ -35,6 +35,9 @@ fix_permissions() {
     log_info "Verificando e ajustando permissões do workspace..."
     # '-R' (recursivo) aplica a mudança a todos os arquivos e pastas.
     sudo chown -R ros:ros /home/ros/ros2_ws
+    # Corrige permissões do workspace
+    sudo chown -R ros:ros /home/ros/ros2_ws
+    sudo chmod -R u+rw /home/ros/ros2_ws
 }
 
 # Configura as variáveis de ambiente para permitir que aplicações com GUI
@@ -112,6 +115,7 @@ setup_gui_environment
 # Ativa o ambiente base do ROS 2 Humble. Isso é necessário para que
 # [cite_start]comandos como 'rosdep' e 'colcon' sejam encontrados no PATH. [cite: 129]
 source /opt/ros/humble/setup.bash
+source install/setup.bash
 
 # Prepara a estrutura de pastas ANTES de tentar instalar e compilar.
 prepare_workspace_structure
