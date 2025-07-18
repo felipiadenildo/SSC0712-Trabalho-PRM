@@ -70,7 +70,7 @@ def generate_launch_description():
     # Executa o comando: ign gazebo -r -v <verbosity> <world_path>
     # Inicia o Gazebo em modo headless (sem GUI), com nível de log definido.
     gazebo = ExecuteProcess(
-        cmd=['ruby', FindExecutable(name="ign"), 'gazebo', '-r', '-v', gz_verbosity, world_path],
+        cmd=['ruby', FindExecutable(name="ign"), 'gazebo',"-s", '-r', '-v', gz_verbosity, world_path],
         output='screen',
         additional_env=gz_env,
         shell=False,

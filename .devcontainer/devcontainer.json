@@ -39,7 +39,8 @@
                 "python.defaultInterpreterPath": "/usr/bin/python3",
                 "editor.formatOnSave": true,
                 "ros.distro": "humble",
-                "xml.server.enabled": true
+                "xml.server.enabled": true,
+                "terminal.integrated.defaultProfile.linux": "bash"
             }
         }
     }
