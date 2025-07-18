@@ -52,7 +52,7 @@ A execução requer **5 terminais separados**. Abra cada um, navegue até a raiz
     Este comando adiciona o robô ao mundo, carrega seus controladores (rodas e garra) e inicia o RViz para visualização.
 
     ```bash
-    ros2 launch prm carrega_robo.py
+    ros2 launch prm carrega_robo.launch.py
     ```
 
 3.  **Terminal 3 - Iniciar o Planejador de Caminho:**
