@@ -1,0 +1,65 @@
+[0.000000] (-) TimerEvent: {}
+[0.000331] (prm) JobQueued: {'identifier': 'prm', 'dependencies': OrderedDict()}
+[0.000441] (prm) JobStarted: {'identifier': 'prm'}
+[0.097733] (-) TimerEvent: {}
+[0.198223] (-) TimerEvent: {}
+[0.298709] (-) TimerEvent: {}
+[0.399462] (-) TimerEvent: {}
+[0.500030] (-) TimerEvent: {}
+[0.600525] (-) TimerEvent: {}
+[0.701076] (-) TimerEvent: {}
+[0.801542] (-) TimerEvent: {}
+[0.902074] (-) TimerEvent: {}
+[1.002606] (-) TimerEvent: {}
+[1.103165] (-) TimerEvent: {}
+[1.204836] (-) TimerEvent: {}
+[1.305252] (-) TimerEvent: {}
+[1.405639] (-) TimerEvent: {}
+[1.506114] (-) TimerEvent: {}
+[1.606568] (-) TimerEvent: {}
+[1.707095] (-) TimerEvent: {}
+[1.807559] (-) TimerEvent: {}
+[1.908159] (-) TimerEvent: {}
+[2.008673] (-) TimerEvent: {}
+[2.109443] (-) TimerEvent: {}
+[2.209955] (-) TimerEvent: {}
+[2.310374] (-) TimerEvent: {}
+[2.410860] (-) TimerEvent: {}
+[2.413933] (prm) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/ros2_ws/build/prm/build', '--no-deps', 'symlink_data'], 'cwd': '/ros2_ws/build/prm', 'env': {'PYTHON_BASIC_REPL': '1', 'HOSTNAME': 'felipi-pc', 'GIT_ASKPASS': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass.sh', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'BROWSER': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/helpers/browser.sh', 'HOME': '/home/ros', 'TERM_PROGRAM_VERSION': '1.101.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-83d0ef21-4bec-43f1-951a-94b218cdb433.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node', 'PYDEVD_DISABLE_FILE_VALIDATION': '1', 'BUNDLED_DEBUGPY_PATH': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/libs/debugpy', 'COLORTERM': 'truecolor', 'REMOTE_CONTAINERS': 'true', 'COLCON_PREFIX_PATH': '/home/ros/ros2_ws/install', 'ROS_DISTRO': 'humble', 'REMOTE_CONTAINERS_IPC': '/tmp/vscode-remote-containers-ipc-1aa35aa1-6632-4992-8573-4f64068a021f.sock', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'NVIDIA_DRIVER_CAPABILITIES': 'all', 'TERM': 'xterm-256color', 'GAZEBO_MODEL_PATH': '/home/ros/ros2_ws/src/prm/models:', 'LIBGL_ALWAYS_INDIRECT': '1', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/remote-cli:/home/ros/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/scripts/noConfigScripts:/home/ros/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand', 'REMOTE_CONTAINERS_SOCKETS': '["/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock","/home/ros/.gnupg/S.gpg-agent"]', 'DISPLAY': ':0', 'VSCODE_DEBUGPY_ADAPTER_ENDPOINTS': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-76955a91020aa554.txt', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-78ff8983b9.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'SHELL': '/bin/sh', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/ros2_ws/build/prm', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[2.512810] (-) TimerEvent: {}
+[2.613648] (-) TimerEvent: {}
+[2.714208] (-) TimerEvent: {}
+[2.814684] (-) TimerEvent: {}
+[2.915115] (-) TimerEvent: {}
+[3.015556] (-) TimerEvent: {}
+[3.116018] (-) TimerEvent: {}
+[3.216455] (-) TimerEvent: {}
+[3.249843] (prm) StdoutLine: {'line': b'running develop\n'}
+[3.316584] (-) TimerEvent: {}
+[3.417054] (-) TimerEvent: {}
+[3.517503] (-) TimerEvent: {}
+[3.617943] (-) TimerEvent: {}
+[3.715435] (prm) StdoutLine: {'line': b'running egg_info\n'}
+[3.715913] (prm) StdoutLine: {'line': b'writing prm.egg-info/PKG-INFO\n'}
+[3.716431] (prm) StdoutLine: {'line': b'writing dependency_links to prm.egg-info/dependency_links.txt\n'}
+[3.716984] (prm) StdoutLine: {'line': b'writing entry points to prm.egg-info/entry_points.txt\n'}
+[3.717398] (prm) StdoutLine: {'line': b'writing requirements to prm.egg-info/requires.txt\n'}
+[3.717811] (prm) StdoutLine: {'line': b'writing top-level names to prm.egg-info/top_level.txt\n'}
+[3.718023] (-) TimerEvent: {}
+[3.722972] (prm) StdoutLine: {'line': b"reading manifest file 'prm.egg-info/SOURCES.txt'\n"}
+[3.726957] (prm) StdoutLine: {'line': b"writing manifest file 'prm.egg-info/SOURCES.txt'\n"}
+[3.730503] (prm) StdoutLine: {'line': b'running build_ext\n'}
+[3.733018] (prm) StdoutLine: {'line': b'Creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)\n'}
+[3.735712] (prm) StdoutLine: {'line': b'Installing controle_robo script to /ros2_ws/install/prm/lib/prm\n'}
+[3.736332] (prm) StdoutLine: {'line': b'Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm\n'}
+[3.737320] (prm) StdoutLine: {'line': b'Installing path_planner_node script to /ros2_ws/install/prm/lib/prm\n'}
+[3.737581] (prm) StdoutLine: {'line': b'Installing robo_mapper script to /ros2_ws/install/prm/lib/prm\n'}
+[3.737869] (prm) StdoutLine: {'line': b'Installing state_machine_node script to /ros2_ws/install/prm/lib/prm\n'}
+[3.738147] (prm) StdoutLine: {'line': b'Installing tartaruga script to /ros2_ws/install/prm/lib/prm\n'}
+[3.738400] (prm) StdoutLine: {'line': b'\n'}
+[3.738651] (prm) StdoutLine: {'line': b'Installed /ros2_ws/build/prm\n'}
+[3.738939] (prm) StdoutLine: {'line': b'running symlink_data\n'}
+[3.818141] (prm) CommandEnded: {'returncode': 0}
+[3.818969] (-) TimerEvent: {}
+[3.875142] (prm) JobEnded: {'identifier': 'prm', 'rc': 0}
+[3.877840] (-) EventReactorShutdown: {}

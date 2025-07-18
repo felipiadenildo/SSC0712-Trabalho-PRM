@@ -1,0 +1,86 @@
+[0.000000] (-) TimerEvent: {}
+[0.000345] (prm) JobQueued: {'identifier': 'prm', 'dependencies': OrderedDict()}
+[0.000418] (prm) JobStarted: {'identifier': 'prm'}
+[0.098292] (-) TimerEvent: {}
+[0.199070] (-) TimerEvent: {}
+[0.300498] (-) TimerEvent: {}
+[0.401052] (-) TimerEvent: {}
+[0.501459] (-) TimerEvent: {}
+[0.601868] (-) TimerEvent: {}
+[0.702230] (-) TimerEvent: {}
+[0.802628] (-) TimerEvent: {}
+[0.903030] (-) TimerEvent: {}
+[1.003473] (-) TimerEvent: {}
+[1.103915] (-) TimerEvent: {}
+[1.204380] (-) TimerEvent: {}
+[1.304774] (-) TimerEvent: {}
+[1.405169] (-) TimerEvent: {}
+[1.505573] (-) TimerEvent: {}
+[1.606021] (-) TimerEvent: {}
+[1.706478] (-) TimerEvent: {}
+[1.746199] (prm) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/ros2_ws/build/prm/build', '--no-deps', 'symlink_data', '--force'], 'cwd': '/ros2_ws/build/prm', 'env': {'PYTHON_BASIC_REPL': '1', 'HOSTNAME': 'felipi-pc', 'GIT_ASKPASS': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass.sh', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'BROWSER': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/helpers/browser.sh', 'HOME': '/home/ros', 'TERM_PROGRAM_VERSION': '1.101.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-23435ec2-671f-4eee-afc0-a2f47132bb5a.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node', 'PYDEVD_DISABLE_FILE_VALIDATION': '1', 'BUNDLED_DEBUGPY_PATH': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/libs/debugpy', 'COLORTERM': 'truecolor', 'REMOTE_CONTAINERS': 'true', 'COLCON_PREFIX_PATH': '/ros2_ws/install:/home/ros/ros2_ws/install', 'ROS_DISTRO': 'humble', 'REMOTE_CONTAINERS_IPC': '/tmp/vscode-remote-containers-ipc-1aa35aa1-6632-4992-8573-4f64068a021f.sock', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'NVIDIA_DRIVER_CAPABILITIES': 'all', 'TERM': 'xterm-256color', 'GAZEBO_MODEL_PATH': '/home/ros/ros2_ws/src/prm/models:', 'LIBGL_ALWAYS_INDIRECT': '1', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/remote-cli:/home/ros/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/scripts/noConfigScripts:/home/ros/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand', 'REMOTE_CONTAINERS_SOCKETS': '["/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock","/home/ros/.gnupg/S.gpg-agent"]', 'DISPLAY': ':0', 'VSCODE_DEBUGPY_ADAPTER_ENDPOINTS': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-76955a91020aa554.txt', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-78ff8983b9.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock', 'AMENT_PREFIX_PATH': '/ros2_ws/install/prm:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'SHELL': '/bin/sh', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/ros2_ws/build/prm', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:/ros2_ws/install/prm/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[1.806624] (-) TimerEvent: {}
+[1.907052] (-) TimerEvent: {}
+[2.007904] (-) TimerEvent: {}
+[2.108283] (-) TimerEvent: {}
+[2.208717] (-) TimerEvent: {}
+[2.309058] (-) TimerEvent: {}
+[2.337357] (prm) StdoutLine: {'line': b'running develop\n'}
+[2.409212] (-) TimerEvent: {}
+[2.509637] (-) TimerEvent: {}
+[2.610039] (-) TimerEvent: {}
+[2.675004] (prm) StdoutLine: {'line': b'running egg_info\n'}
+[2.675446] (prm) StdoutLine: {'line': b'writing prm.egg-info/PKG-INFO\n'}
+[2.676078] (prm) StdoutLine: {'line': b'writing dependency_links to prm.egg-info/dependency_links.txt\n'}
+[2.676687] (prm) StdoutLine: {'line': b'writing entry points to prm.egg-info/entry_points.txt\n'}
+[2.677066] (prm) StdoutLine: {'line': b'writing requirements to prm.egg-info/requires.txt\n'}
+[2.677386] (prm) StdoutLine: {'line': b'writing top-level names to prm.egg-info/top_level.txt\n'}
+[2.682985] (prm) StdoutLine: {'line': b"reading manifest file 'prm.egg-info/SOURCES.txt'\n"}
+[2.687003] (prm) StdoutLine: {'line': b"writing manifest file 'prm.egg-info/SOURCES.txt'\n"}
+[2.690684] (prm) StdoutLine: {'line': b'running build_ext\n'}
+[2.691369] (prm) StdoutLine: {'line': b'Creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)\n'}
+[2.693424] (prm) StdoutLine: {'line': b'Installing controle_robo script to /ros2_ws/install/prm/lib/prm\n'}
+[2.693836] (prm) StdoutLine: {'line': b'Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm\n'}
+[2.694193] (prm) StdoutLine: {'line': b'Installing path_planner_node script to /ros2_ws/install/prm/lib/prm\n'}
+[2.694491] (prm) StdoutLine: {'line': b'Installing robo_mapper script to /ros2_ws/install/prm/lib/prm\n'}
+[2.694812] (prm) StdoutLine: {'line': b'Installing state_machine_node script to /ros2_ws/install/prm/lib/prm\n'}
+[2.695134] (prm) StdoutLine: {'line': b'Installing tartaruga script to /ros2_ws/install/prm/lib/prm\n'}
+[2.695476] (prm) StdoutLine: {'line': b'\n'}
+[2.695712] (prm) StdoutLine: {'line': b'Installed /ros2_ws/build/prm\n'}
+[2.696080] (prm) StdoutLine: {'line': b'running symlink_data\n'}
+[2.696395] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages\n'}
+[2.696669] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/package.xml -> /ros2_ws/install/prm/share/prm\n'}
+[2.696975] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.697412] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.697819] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.698234] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.698571] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.698910] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description\n'}
+[2.699263] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz\n'}
+[2.699583] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz\n'}
+[2.700022] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config\n'}
+[2.700405] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.700762] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.701111] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.701445] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.701783] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.702139] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.702390] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena\n'}
+[2.702630] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena\n'}
+[2.702863] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes\n'}
+[2.703135] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes\n'}
+[2.703391] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1\n'}
+[2.703640] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1\n'}
+[2.703884] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/empty.world -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.704151] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.704397] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.704628] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.704886] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.705157] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.705428] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.705672] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.705910] (prm) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.710146] (-) TimerEvent: {}
+[2.760752] (prm) CommandEnded: {'returncode': 0}
+[2.800416] (prm) JobEnded: {'identifier': 'prm', 'rc': 0}
+[2.801817] (-) EventReactorShutdown: {}

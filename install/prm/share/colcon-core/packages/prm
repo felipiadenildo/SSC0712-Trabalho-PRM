@@ -1,1 +1,1 @@
-setuptools
+controller_manager:gazebo_ros:geometry_msgs:ign_ros2_control:joint_state_publisher:joint_state_publisher_gui:rclpy:robot_state_publisher:ros2_control:ros2_controllers:ros2launch:ros_gz_bridge:ros_ign_gazebo:rviz2:tf_transformations:topic_tools:turtlesim:xacro

@@ -1,0 +1,144 @@
+[0.000000] (-) TimerEvent: {}
+[0.000353] (prm) JobQueued: {'identifier': 'prm', 'dependencies': OrderedDict()}
+[0.000450] (prm) JobStarted: {'identifier': 'prm'}
+[0.098088] (-) TimerEvent: {}
+[0.198640] (-) TimerEvent: {}
+[0.299197] (-) TimerEvent: {}
+[0.399729] (-) TimerEvent: {}
+[0.500125] (-) TimerEvent: {}
+[0.600499] (-) TimerEvent: {}
+[0.701166] (-) TimerEvent: {}
+[0.801772] (-) TimerEvent: {}
+[0.902352] (-) TimerEvent: {}
+[1.002829] (-) TimerEvent: {}
+[1.103388] (-) TimerEvent: {}
+[1.203811] (-) TimerEvent: {}
+[1.304295] (-) TimerEvent: {}
+[1.404772] (-) TimerEvent: {}
+[1.505215] (-) TimerEvent: {}
+[1.605644] (-) TimerEvent: {}
+[1.706010] (-) TimerEvent: {}
+[1.806511] (-) TimerEvent: {}
+[1.906889] (-) TimerEvent: {}
+[2.007361] (-) TimerEvent: {}
+[2.032188] (prm) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', 'build/prm', 'build', '--build-base', '/ros2_ws/build/prm/build', 'install', '--record', '/ros2_ws/build/prm/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/ros2_ws', 'env': {'PYTHON_BASIC_REPL': '1', 'HOSTNAME': 'felipi-pc', 'GIT_ASKPASS': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass.sh', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'BROWSER': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/helpers/browser.sh', 'HOME': '/home/ros', 'TERM_PROGRAM_VERSION': '1.101.2', 'VSCODE_IPC_HOOK_CLI': '/tmp/vscode-ipc-baf4269e-e115-46e0-a5ed-eb13157bb44f.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/node', 'PYDEVD_DISABLE_FILE_VALIDATION': '1', 'BUNDLED_DEBUGPY_PATH': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/libs/debugpy', 'COLORTERM': 'truecolor', 'REMOTE_CONTAINERS': 'true', 'COLCON_PREFIX_PATH': '/ros2_ws/install:/home/ros/ros2_ws/install', 'ROS_DISTRO': 'humble', 'REMOTE_CONTAINERS_IPC': '/tmp/vscode-remote-containers-ipc-1aa35aa1-6632-4992-8573-4f64068a021f.sock', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'NVIDIA_DRIVER_CAPABILITIES': 'all', 'TERM': 'xterm-256color', 'GAZEBO_MODEL_PATH': '/home/ros/ros2_ws/src/prm/models:', 'LIBGL_ALWAYS_INDIRECT': '1', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/vscode/vscode-server/bin/linux-x64/2901c5ac6db8a986a5666c3af51ff804d05af0d4/bin/remote-cli:/home/ros/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/bundled/scripts/noConfigScripts:/home/ros/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand', 'REMOTE_CONTAINERS_SOCKETS': '["/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock","/home/ros/.gnupg/S.gpg-agent"]', 'DISPLAY': ':0', 'VSCODE_DEBUGPY_ADAPTER_ENDPOINTS': '/home/ros/.vscode-server/extensions/ms-python.debugpy-2025.10.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-76955a91020aa554.txt', 'LANG': 'C.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/tmp/vscode-git-78ff8983b9.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/tmp/vscode-ssh-auth-1aa35aa1-6632-4992-8573-4f64068a021f.sock', 'AMENT_PREFIX_PATH': '/ros2_ws/install/prm:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'SHELL': '/bin/sh', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/ros2_ws/build/prm', 'LC_ALL': 'C.UTF-8', 'PYTHONPATH': '/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:/ros2_ws/install/prm/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[2.107517] (-) TimerEvent: {}
+[2.207921] (-) TimerEvent: {}
+[2.308330] (-) TimerEvent: {}
+[2.408693] (-) TimerEvent: {}
+[2.509029] (-) TimerEvent: {}
+[2.609445] (-) TimerEvent: {}
+[2.700783] (prm) StdoutLine: {'line': b'running egg_info\n'}
+[2.701895] (prm) StdoutLine: {'line': b'creating build/prm/prm.egg-info\n'}
+[2.702375] (prm) StdoutLine: {'line': b'writing build/prm/prm.egg-info/PKG-INFO\n'}
+[2.702960] (prm) StdoutLine: {'line': b'writing dependency_links to build/prm/prm.egg-info/dependency_links.txt\n'}
+[2.703505] (prm) StdoutLine: {'line': b'writing entry points to build/prm/prm.egg-info/entry_points.txt\n'}
+[2.703982] (prm) StdoutLine: {'line': b'writing requirements to build/prm/prm.egg-info/requires.txt\n'}
+[2.704214] (prm) StdoutLine: {'line': b'writing top-level names to build/prm/prm.egg-info/top_level.txt\n'}
+[2.704530] (prm) StdoutLine: {'line': b"writing manifest file 'build/prm/prm.egg-info/SOURCES.txt'\n"}
+[2.708962] (prm) StdoutLine: {'line': b"reading manifest file 'build/prm/prm.egg-info/SOURCES.txt'\n"}
+[2.709320] (prm) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[2.709501] (-) TimerEvent: {}
+[2.710892] (prm) StdoutLine: {'line': b"writing manifest file 'build/prm/prm.egg-info/SOURCES.txt'\n"}
+[2.711220] (prm) StdoutLine: {'line': b'running build\n'}
+[2.711395] (prm) StdoutLine: {'line': b'running build_py\n'}
+[2.711661] (prm) StdoutLine: {'line': b'creating /ros2_ws/build/prm/build\n'}
+[2.711920] (prm) StdoutLine: {'line': b'creating /ros2_ws/build/prm/build/lib\n'}
+[2.712186] (prm) StdoutLine: {'line': b'creating /ros2_ws/build/prm/build/lib/prm\n'}
+[2.712531] (prm) StdoutLine: {'line': b'copying prm/controle_robo.py -> /ros2_ws/build/prm/build/lib/prm\n'}
+[2.712696] (prm) StdoutLine: {'line': b'copying prm/robo_mapper.py -> /ros2_ws/build/prm/build/lib/prm\n'}
+[2.712957] (prm) StdoutLine: {'line': b'copying prm/controle_tartaruga.py -> /ros2_ws/build/prm/build/lib/prm\n'}
+[2.713280] (prm) StdoutLine: {'line': b'copying prm/__init__.py -> /ros2_ws/build/prm/build/lib/prm\n'}
+[2.713444] (prm) StdoutLine: {'line': b'copying prm/ground_truth_odometry.py -> /ros2_ws/build/prm/build/lib/prm\n'}
+[2.713653] (prm) StdoutLine: {'line': b'creating /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.713843] (prm) StdoutLine: {'line': b'copying prm/path_finding/state_machine_node.py -> /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.714025] (prm) StdoutLine: {'line': b'copying prm/path_finding/path_planner_util.py -> /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.714266] (prm) StdoutLine: {'line': b'copying prm/path_finding/state_machine.py -> /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.714475] (prm) StdoutLine: {'line': b'copying prm/path_finding/__init__.py -> /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.714671] (prm) StdoutLine: {'line': b'copying prm/path_finding/path_planner_node.py -> /ros2_ws/build/prm/build/lib/prm/path_finding\n'}
+[2.715285] (prm) StdoutLine: {'line': b'running install\n'}
+[2.715972] (prm) StdoutLine: {'line': b'running install_lib\n'}
+[2.717904] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.718210] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/controle_robo.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.718550] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/robo_mapper.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.718984] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/controle_tartaruga.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.719208] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/__init__.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.719451] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.719672] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/path_finding/state_machine_node.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.719863] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/path_finding/path_planner_util.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.720134] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/path_finding/state_machine.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.720490] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/path_finding/__init__.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.720797] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/path_finding/path_planner_node.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding\n'}
+[2.721045] (prm) StdoutLine: {'line': b'copying /ros2_ws/build/prm/build/lib/prm/ground_truth_odometry.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm\n'}
+[2.722569] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_robo.py to controle_robo.cpython-310.pyc\n'}
+[2.724915] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/robo_mapper.py to robo_mapper.cpython-310.pyc\n'}
+[2.727146] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_tartaruga.py to controle_tartaruga.cpython-310.pyc\n'}
+[2.728631] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/__init__.py to __init__.cpython-310.pyc\n'}
+[2.729014] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/state_machine_node.py to state_machine_node.cpython-310.pyc\n'}
+[2.731644] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/path_planner_util.py to path_planner_util.cpython-310.pyc\n'}
+[2.734289] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/state_machine.py to state_machine.cpython-310.pyc\n'}
+[2.734925] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/__init__.py to __init__.cpython-310.pyc\n'}
+[2.735236] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/path_planner_node.py to path_planner_node.cpython-310.pyc\n'}
+[2.738071] (prm) StdoutLine: {'line': b'byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/ground_truth_odometry.py to ground_truth_odometry.cpython-310.pyc\n'}
+[2.739331] (prm) StdoutLine: {'line': b'running install_data\n'}
+[2.739866] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/ament_index\n'}
+[2.740146] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/ament_index/resource_index\n'}
+[2.740538] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/ament_index/resource_index/packages\n'}
+[2.740860] (prm) StdoutLine: {'line': b'copying resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages\n'}
+[2.741147] (prm) StdoutLine: {'line': b'copying package.xml -> /ros2_ws/install/prm/share/prm\n'}
+[2.741393] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/launch\n'}
+[2.741553] (prm) StdoutLine: {'line': b'copying launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.741702] (prm) StdoutLine: {'line': b'copying launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.741848] (prm) StdoutLine: {'line': b'copying launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.742117] (prm) StdoutLine: {'line': b'copying launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.742420] (prm) StdoutLine: {'line': b'copying launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch\n'}
+[2.742619] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/description\n'}
+[2.742768] (prm) StdoutLine: {'line': b'copying description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description\n'}
+[2.742914] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/rviz\n'}
+[2.743149] (prm) StdoutLine: {'line': b'copying rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz\n'}
+[2.743439] (prm) StdoutLine: {'line': b'copying rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz\n'}
+[2.743590] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/config\n'}
+[2.743783] (prm) StdoutLine: {'line': b'copying config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config\n'}
+[2.744048] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models\n'}
+[2.744328] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.744486] (prm) StdoutLine: {'line': b'copying models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.744623] (prm) StdoutLine: {'line': b'copying models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.744759] (prm) StdoutLine: {'line': b'copying models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes\n'}
+[2.745030] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.745225] (prm) StdoutLine: {'line': b'copying models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.745417] (prm) StdoutLine: {'line': b'copying models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.745631] (prm) StdoutLine: {'line': b'copying models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos\n'}
+[2.745851] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena\n'}
+[2.745994] (prm) StdoutLine: {'line': b'copying models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena\n'}
+[2.746200] (prm) StdoutLine: {'line': b'copying models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena\n'}
+[2.746621] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes\n'}
+[2.747034] (prm) StdoutLine: {'line': b'copying models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes\n'}
+[2.747385] (prm) StdoutLine: {'line': b'copying models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes\n'}
+[2.747829] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1\n'}
+[2.748153] (prm) StdoutLine: {'line': b'copying models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1\n'}
+[2.748516] (prm) StdoutLine: {'line': b'copying models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1\n'}
+[2.748818] (prm) StdoutLine: {'line': b'creating /ros2_ws/install/prm/share/prm/world\n'}
+[2.749086] (prm) StdoutLine: {'line': b'copying world/empty.world -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.749426] (prm) StdoutLine: {'line': b'copying world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.749736] (prm) StdoutLine: {'line': b'copying world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.749998] (prm) StdoutLine: {'line': b'copying world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.750280] (prm) StdoutLine: {'line': b'copying world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.750688] (prm) StdoutLine: {'line': b'copying world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.751031] (prm) StdoutLine: {'line': b'copying world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.751307] (prm) StdoutLine: {'line': b'copying world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.751651] (prm) StdoutLine: {'line': b'copying world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/\n'}
+[2.751909] (prm) StdoutLine: {'line': b'running install_egg_info\n'}
+[2.756740] (prm) StdoutLine: {'line': b'Copying build/prm/prm.egg-info to /ros2_ws/install/prm/lib/python3.10/site-packages/prm-0.0.0-py3.10.egg-info\n'}
+[2.759223] (prm) StdoutLine: {'line': b'running install_scripts\n'}
+[2.809650] (-) TimerEvent: {}
+[2.832039] (prm) StdoutLine: {'line': b'Installing controle_robo script to /ros2_ws/install/prm/lib/prm\n'}
+[2.837226] (prm) StdoutLine: {'line': b'Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm\n'}
+[2.837680] (prm) StdoutLine: {'line': b'Installing path_planner_node script to /ros2_ws/install/prm/lib/prm\n'}
+[2.837998] (prm) StdoutLine: {'line': b'Installing robo_mapper script to /ros2_ws/install/prm/lib/prm\n'}
+[2.839320] (prm) StdoutLine: {'line': b'Installing state_machine_node script to /ros2_ws/install/prm/lib/prm\n'}
+[2.839755] (prm) StdoutLine: {'line': b'Installing tartaruga script to /ros2_ws/install/prm/lib/prm\n'}
+[2.840061] (prm) StdoutLine: {'line': b"writing list of installed files to '/ros2_ws/build/prm/install.log'\n"}
+[2.895982] (prm) CommandEnded: {'returncode': 0}
+[2.910351] (-) TimerEvent: {}
+[2.933153] (prm) JobEnded: {'identifier': 'prm', 'rc': 0}
+[2.934662] (-) EventReactorShutdown: {}

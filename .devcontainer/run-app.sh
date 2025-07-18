@@ -1,9 +1,11 @@
 #!/bin/bash
-# Este script serve como o painel de controle principal para iniciar e parar
-# os diferentes componentes da aplicação ROS.
-set -e
+# Painel de Controle Avançado para o Ambiente de Desenvolvimento ROS 2.
+# Este script automatiza a compilação, atualização, execução e finalização
+# de todos os componentes do projeto, utilizando o 'terminator' para
+# organizar os processos em painéis de terminal separados.
 
 # --- Configurações Globais ---
+# Usar 'readonly' torna as variáveis imutáveis, evitando alterações acidentais.
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
@@ -11,71 +13,121 @@ readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m' # No Color
 
 readonly WORKSPACE="/home/ros/ros2_ws"
-readonly LAUNCH_PACKAGE="prm"
+readonly PACKAGE_NAME="prm"
 
-source install/setup.bash
+# --- Funções de Lógica ---
 
-# --- Funções ---
-
-# IMPRIME o comando exato que o usuário deve executar em um novo terminal.
-# Esta abordagem é 100% confiável, pois evita problemas de interpretação de shell.
-print_command_to_run() {
-    local name="$1"
-    local ros_command="$2"
-    local color="$3"
-    
-    # Constrói o comando completo que garante que o ambiente seja carregado corretamente.
-    local full_command="source /opt/ros/humble/setup.bash && source ${WORKSPACE}/install/setup.bash && ${ros_command}"
-
-    echo -e "${color}--- Para iniciar o ${name} ---${NC}"
-    echo -e "1. Abra um NOVO terminal no VS Code (clique no ícone '+' ao lado do nome do terminal)."
-    echo -e "2. Copie o comando abaixo, cole no novo terminal e pressione Enter:"
-    echo -e "${YELLOW}${full_command}${NC}\n"
+# COMPILA o workspace do ROS 2.
+func_build() {
+    echo -e "${GREEN}=== Construindo o Workspace (${PACKAGE_NAME}) ===${NC}"
+    cd "${WORKSPACE}"
+    colcon build --symlink-install --packages-select "${PACKAGE_NAME}"
+    echo -e "${GREEN}Construção finalizada com sucesso!${NC}"
 }
 
-# Para todos os processos relacionados à simulação.
-stop_processes() {
-    echo -e "${RED}Parando todos os processos...${NC}"
+# ATUALIZA e instala as dependências do projeto.
+func_update_deps() {
+    echo -e "${YELLOW}=== Atualizando Dependências (rosdep) ===${NC}"
+    cd "${WORKSPACE}"
+    # Fonteia o ambiente ROS base para garantir que rosdep seja encontrado.
+    source /opt/ros/humble/setup.bash
+    rosdep install --from-paths src -i -y --ignore-src
+    echo -e "${GREEN}Dependências atualizadas!${NC}"
+}
+
+# INICIA a aplicação completa em um layout de terminais separados.
+func_start() {
+    # Verifica se o workspace foi compilado antes de tentar executar.
+    if [ ! -f "${WORKSPACE}/install/setup.bash" ]; then
+        echo -e "${RED}Erro: O workspace ainda não foi compilado.${NC}"
+        echo -e "Execute o comando '${YELLOW}runapp build${NC}' primeiro."
+        exit 1
+    fi
+
+    echo -e "${GREEN}🚀 Iniciando aplicação completa em um novo layout do Terminator...${NC}"
+
+    # Define o comando de 'sourcing' que será prefixado em cada comando ROS.
+    local source_cmd="source /opt/ros/humble/setup.bash && source ${WORKSPACE}/install/setup.bash"
+
+    # Utiliza o Terminator para criar um layout com 3 painéis, cada um com uma tarefa.
+    # O 'bash -c "..."' é usado para encadear comandos em cada painel.
+    # O 'exec bash' no final mantém o painel aberto e interativo após o processo terminar.
+    terminator -e "bash -c '${source_cmd}; echo \"Pane 1: Simulação (Gazebo)\"; ros2 launch ${PACKAGE_NAME} inicia_simulacao.launch.py; exec bash'" \
+               --new-tab -e "bash -c '${source_cmd}; echo \"Pane 2: Planejador de Caminhos\"; sleep 5; ros2 run ${PACKAGE_NAME} path_planner_node; exec bash'" \
+               --new-tab -e "bash -c '${source_cmd}; echo \"Pane 3: Máquina de Estados\"; sleep 5; ros2 run ${PACKAGE_NAME} state_machine_node; exec bash'"
+}
+
+# PARA todos os processos relacionados à aplicação.
+func_stop() {
+    echo -e "${RED}=== Parando todos os processos da aplicação ===${NC}"
     # O '|| true' evita que o script pare se um processo não for encontrado.
-    pkill -f "ros2 launch" || true
+    pkill -f terminator || true
     pkill -f "gz sim" || true
+    pkill -f "ros2 launch ${PACKAGE_NAME}" || true
+    pkill -f "ros2 run ${PACKAGE_NAME}" || true
     echo -e "${GREEN}Processos finalizados.${NC}"
 }
 
-# Mostra como usar o script.
-show_usage() {
-    echo -e "${YELLOW}Uso:${NC} runapp [comando]"
-    echo -e "\nComandos disponíveis:"
-    echo -e "  ${GREEN}sim${NC}          - Mostra o comando para iniciar a simulação."
-    echo -e "  ${BLUE}ctrl${NC}         - Mostra o comando para iniciar o controle do robô."
-    echo -e "  ${RED}kill${NC}         - Para todos os processos ROS e Gazebo."
+# LIMPA o workspace, removendo os diretórios de compilação.
+func_nuke() {
+    echo -e "${RED}🔥 ATENÇÃO! Isso irá parar todos os processos e apagar os diretórios 'build', 'install' e 'log'.${NC}"
+    read -p "Você tem certeza? (s/n): " confirm
+    if [[ "$confirm" != "s" ]]; then
+        echo "Operação cancelada."
+        exit 0
+    fi
+
+    func_stop
+    echo -e "${YELLOW}Limpando diretórios do workspace...${NC}"
+    cd "${WORKSPACE}"
+    rm -rf build install log
+    echo -e "${GREEN}Limpeza concluída.${NC}"
 }
 
-# --- Execução Principal ---
 
-# Verifica se o workspace foi compilado.
-if [ ! -f "${WORKSPACE}/install/setup.bash" ]; then
-    echo -e "${RED}Erro: O workspace ainda não foi compilado.${NC}"
-    echo -e "Execute o comando '${YELLOW}build${NC}' primeiro."
-    exit 1
-fi
+# MOSTRA o menu de ajuda.
+func_usage() {
+    echo -e "${YELLOW}Painel de Controle da Aplicação ROS${NC}"
+    echo -e "------------------------------------"
+    echo -e "Uso: runapp [comando]\n"
+    echo -e "Comandos de Gerenciamento:"
+    echo -e "  ${GREEN}build${NC}        - Compila o workspace."
+    echo -e "  ${GREEN}update${NC}       - Instala/atualiza as dependências (rosdep)."
+    echo -e "\nComandos de Execução:"
+    echo -e "  ${BLUE}start${NC}        - Inicia a aplicação completa (Simulação, Planner, Controle)."
+    echo -e "  ${RED}stop${NC}         - Para todos os processos da aplicação."
+    echo -e "\nComandos Destrutivos:"
+    echo -e "  ${RED}nuke${NC}         - Para tudo e limpa os diretórios 'build', 'install', 'log'."
+}
 
+# --- Roteador Principal de Comandos ---
+
+# Se nenhum comando for fornecido, mostra o menu de ajuda.
 if [ $# -eq 0 ]; then
-    show_usage
+    func_usage
     exit 0
 fi
 
+# Roteia o primeiro argumento ($1) para a função correspondente.
 case "$1" in
-    sim|simulation)
-        print_command_to_run "Simulação (Gazebo)" "ros2 launch ${LAUNCH_PACKAGE} inicia_simulacao.launch.py" "${GREEN}"
+    start)
+        func_start
         ;;
-    ctrl|control)
-        print_command_to_run "Controle do Robô (RViz, etc.)" "ros2 launch ${LAUNCH_PACKAGE} carrega_robo.launch.py" "${BLUE}"
+    stop)
+        func_stop
         ;;
-    kill|stop)
-        stop_processes
+    build)
+        func_build
+        ;;
+    update)
+        func_update_deps
+        ;;
+    nuke)
+        func_nuke
         ;;
     *)
-        echo -e "${RED}Erro: Comando '$1' desconhecido.${NC}"; show_usage; exit 1
+        echo -e "${RED}Erro: Comando '$1' desconhecido.${NC}"
+        func_usage
+        exit 1
         ;;
 esac

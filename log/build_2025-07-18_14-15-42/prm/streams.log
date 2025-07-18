@@ -1,0 +1,22 @@
+[2.416s] Invoking command in '/ros2_ws/build/prm': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data
+[3.250s] running develop
+[3.715s] running egg_info
+[3.716s] writing prm.egg-info/PKG-INFO
+[3.716s] writing dependency_links to prm.egg-info/dependency_links.txt
+[3.717s] writing entry points to prm.egg-info/entry_points.txt
+[3.717s] writing requirements to prm.egg-info/requires.txt
+[3.717s] writing top-level names to prm.egg-info/top_level.txt
+[3.723s] reading manifest file 'prm.egg-info/SOURCES.txt'
+[3.727s] writing manifest file 'prm.egg-info/SOURCES.txt'
+[3.730s] running build_ext
+[3.733s] Creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)
+[3.736s] Installing controle_robo script to /ros2_ws/install/prm/lib/prm
+[3.737s] Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm
+[3.737s] Installing path_planner_node script to /ros2_ws/install/prm/lib/prm
+[3.737s] Installing robo_mapper script to /ros2_ws/install/prm/lib/prm
+[3.738s] Installing state_machine_node script to /ros2_ws/install/prm/lib/prm
+[3.738s] Installing tartaruga script to /ros2_ws/install/prm/lib/prm
+[3.738s] 
+[3.738s] Installed /ros2_ws/build/prm
+[3.739s] running symlink_data
+[3.818s] Invoked command in '/ros2_ws/build/prm' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data

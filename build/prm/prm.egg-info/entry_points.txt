@@ -1,6 +1,8 @@
 [console_scripts]
 controle_robo = prm.controle_robo:main
 ground_truth_odometry = prm.ground_truth_odometry:main
+path_planner_node = prm.path_finding.path_planner_node:main
 robo_mapper = prm.robo_mapper:main
+state_machine_node = prm.path_finding.state_machine_node:main
 tartaruga = prm.controle_tartaruga:main
 

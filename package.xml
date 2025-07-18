@@ -33,6 +33,8 @@
   <exec_depend>ign_ros2_control</exec_depend>
   <exec_depend>topic_tools</exec_depend>
 
+  <exec_depend>tf_transformations</exec_depend>
+
   <export>
     <build_type>ament_python</build_type>
   </export>

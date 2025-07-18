@@ -9,11 +9,11 @@
 
     // --- Montagem e Diretório de Trabalho ---
     // Define o diretório padrão que será aberto no terminal do VS Code.
-    "workspaceFolder": "/home/ros/ros2_ws",
+    "workspaceFolder": "/ros2_ws",
     // Monta o seu código local dentro do contêiner.
     // Esta é a forma mais robusta: monta a pasta inteira do seu projeto
     // (que contém a pasta 'src') para dentro do diretório de trabalho do contêiner.
-    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws,type=bind",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind",
 
     // --- Argumentos para o 'docker run' ---
     // Estes são os argumentos que o VS Code passa para o Docker ao iniciar o contêiner.

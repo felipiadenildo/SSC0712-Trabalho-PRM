@@ -1,0 +1,129 @@
+[0.275s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install', '--cmake-args', '-DCMAKE_BUILD_TYPE=RelWithDebInfo']
+[0.275s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, cmake_args=['-DCMAKE_BUILD_TYPE=RelWithDebInfo'], cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7c3869d6c370>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7c3869d3f940>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7c3869d3f940>>, mixin_verb=('build',))
+[0.688s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.688s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.689s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.689s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.689s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.689s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.689s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/ros2_ws'
+[0.689s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.689s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.689s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.690s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.723s] DEBUG:colcon.colcon_core.package_identification:Package '.' with type 'ros.ament_python' and name 'prm'
+[0.723s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.723s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.723s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.723s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.723s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_args' from command line to '['-DCMAKE_BUILD_TYPE=RelWithDebInfo']'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_target' from command line to 'None'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_clean_cache' from command line to 'False'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_clean_first' from command line to 'False'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_force_configure' from command line to 'False'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'ament_cmake_args' from command line to 'None'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'catkin_cmake_args' from command line to 'None'
+[0.775s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.775s] DEBUG:colcon.colcon_core.verb:Building package 'prm' with the following arguments: {'ament_cmake_args': None, 'build_base': '/ros2_ws/build/prm', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_BUILD_TYPE=RelWithDebInfo'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/ros2_ws/install/prm', 'merge_install': False, 'path': '/ros2_ws', 'symlink_install': True, 'test_result_base': None}
+[0.776s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.778s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.778s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/ros2_ws' with build type 'ament_python'
+[0.778s] Level 1:colcon.colcon_core.shell:create_environment_hook('prm', 'ament_prefix_path')
+[0.785s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.785s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.ps1'
+[0.786s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.dsv'
+[0.788s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.sh'
+[0.790s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.790s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.529s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/ros2_ws'
+[1.530s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.530s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.513s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/ament_index/resource_index/packages/prm
+[2.513s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/package.xml
+[2.513s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/launch/turtlesim_mimic.launch.py
+[2.513s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/launch/carrega_robo.launch.py
+[2.513s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/launch/editar_mundo.launch.py
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/launch/inicia_simulacao.launch.py
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/launch/teste_urdf.launch.py
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/description/robot.urdf.xacro
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/rviz/rviz_config.rviz
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/rviz/urdf.rviz
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/config/controller_config.yaml
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/Paredes/model.config
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/Paredes/paredes.xacro.sdf
+[2.514s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/Paredes/model.sdf
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos/model.config
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos/model.sdf
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/TurtlebotArena/model.config
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/TurtlebotArena/model.sdf
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes/hexagon.dae
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes/wall.dae
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1/model.config
+[2.515s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1/model.sdf
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/empty.world
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/arena_cilindros.sdf.xacro
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/arena.sdf
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/arena_paredes.sdf.xacro
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/empty.sdf
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/empty_arena.sdf.xacro
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/arena_cilindros.sdf
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/arena_paredes.sdf
+[2.516s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/share/prm/world/empty_arena.sdf
+[2.517s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/controle_robo
+[2.517s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/ground_truth_odometry
+[2.517s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/path_planner_node
+[2.518s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/robo_mapper
+[2.518s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/state_machine_node
+[2.518s] DEBUG:colcon.colcon_core.task.python.build:While undoing a previous installation files outside the Python library path are being ignored: /ros2_ws/install/prm/lib/prm/tartaruga
+[2.533s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/ros2_ws/build/prm': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data --force
+[3.539s] Level 1:colcon.colcon_core.shell:create_environment_hook('prm', 'pythonpath_develop')
+[3.540s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/ros2_ws/build/prm' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data --force
+[3.541s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/build/prm/share/prm/hook/pythonpath_develop.ps1'
+[3.543s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/ros2_ws/build/prm/share/prm/hook/pythonpath_develop.dsv'
+[3.543s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/build/prm/share/prm/hook/pythonpath_develop.sh'
+[3.558s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm' for CMake module files
+[3.559s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm' for CMake config files
+[3.561s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib'
+[3.562s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/bin'
+[3.562s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib/pkgconfig/prm.pc'
+[3.563s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib/python3.10/site-packages'
+[3.563s] Level 1:colcon.colcon_core.shell:create_environment_hook('prm', 'pythonpath')
+[3.564s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/pythonpath.ps1'
+[3.565s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/ros2_ws/install/prm/share/prm/hook/pythonpath.dsv'
+[3.565s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/pythonpath.sh'
+[3.567s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/bin'
+[3.567s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(prm)
+[3.568s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.ps1'
+[3.570s] INFO:colcon.colcon_core.shell:Creating package descriptor '/ros2_ws/install/prm/share/prm/package.dsv'
+[3.572s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.sh'
+[3.574s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.bash'
+[3.576s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.zsh'
+[3.578s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/ros2_ws/install/prm/share/colcon-core/packages/prm)
+[3.579s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[3.579s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[3.580s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[3.580s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[3.623s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[3.624s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[3.624s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[3.624s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[3.643s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[3.643s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[3.645s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.ps1'
+[3.648s] INFO:colcon.colcon_core.shell:Creating prefix util module '/ros2_ws/install/_local_setup_util_ps1.py'
+[3.651s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.ps1'
+[3.654s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.sh'
+[3.656s] INFO:colcon.colcon_core.shell:Creating prefix util module '/ros2_ws/install/_local_setup_util_sh.py'
+[3.657s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.sh'
+[3.660s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.bash'
+[3.661s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.bash'
+[3.664s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.zsh'
+[3.665s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.zsh'

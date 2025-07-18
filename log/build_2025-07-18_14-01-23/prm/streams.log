@@ -1,0 +1,110 @@
+[2.033s] Invoking command in '/ros2_ws': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/prm build --build-base /ros2_ws/build/prm/build install --record /ros2_ws/build/prm/install.log --single-version-externally-managed install_data
+[2.701s] running egg_info
+[2.702s] creating build/prm/prm.egg-info
+[2.702s] writing build/prm/prm.egg-info/PKG-INFO
+[2.703s] writing dependency_links to build/prm/prm.egg-info/dependency_links.txt
+[2.703s] writing entry points to build/prm/prm.egg-info/entry_points.txt
+[2.704s] writing requirements to build/prm/prm.egg-info/requires.txt
+[2.704s] writing top-level names to build/prm/prm.egg-info/top_level.txt
+[2.704s] writing manifest file 'build/prm/prm.egg-info/SOURCES.txt'
+[2.709s] reading manifest file 'build/prm/prm.egg-info/SOURCES.txt'
+[2.709s] adding license file 'LICENSE'
+[2.711s] writing manifest file 'build/prm/prm.egg-info/SOURCES.txt'
+[2.711s] running build
+[2.711s] running build_py
+[2.711s] creating /ros2_ws/build/prm/build
+[2.712s] creating /ros2_ws/build/prm/build/lib
+[2.712s] creating /ros2_ws/build/prm/build/lib/prm
+[2.712s] copying prm/controle_robo.py -> /ros2_ws/build/prm/build/lib/prm
+[2.712s] copying prm/robo_mapper.py -> /ros2_ws/build/prm/build/lib/prm
+[2.713s] copying prm/controle_tartaruga.py -> /ros2_ws/build/prm/build/lib/prm
+[2.713s] copying prm/__init__.py -> /ros2_ws/build/prm/build/lib/prm
+[2.713s] copying prm/ground_truth_odometry.py -> /ros2_ws/build/prm/build/lib/prm
+[2.713s] creating /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.713s] copying prm/path_finding/state_machine_node.py -> /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.714s] copying prm/path_finding/path_planner_util.py -> /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.714s] copying prm/path_finding/state_machine.py -> /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.714s] copying prm/path_finding/__init__.py -> /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.714s] copying prm/path_finding/path_planner_node.py -> /ros2_ws/build/prm/build/lib/prm/path_finding
+[2.715s] running install
+[2.716s] running install_lib
+[2.718s] creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.718s] copying /ros2_ws/build/prm/build/lib/prm/controle_robo.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.718s] copying /ros2_ws/build/prm/build/lib/prm/robo_mapper.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.719s] copying /ros2_ws/build/prm/build/lib/prm/controle_tartaruga.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.719s] copying /ros2_ws/build/prm/build/lib/prm/__init__.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.719s] creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.719s] copying /ros2_ws/build/prm/build/lib/prm/path_finding/state_machine_node.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.719s] copying /ros2_ws/build/prm/build/lib/prm/path_finding/path_planner_util.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.720s] copying /ros2_ws/build/prm/build/lib/prm/path_finding/state_machine.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.720s] copying /ros2_ws/build/prm/build/lib/prm/path_finding/__init__.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.720s] copying /ros2_ws/build/prm/build/lib/prm/path_finding/path_planner_node.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding
+[2.721s] copying /ros2_ws/build/prm/build/lib/prm/ground_truth_odometry.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+[2.722s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_robo.py to controle_robo.cpython-310.pyc
+[2.725s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/robo_mapper.py to robo_mapper.cpython-310.pyc
+[2.727s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_tartaruga.py to controle_tartaruga.cpython-310.pyc
+[2.728s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/__init__.py to __init__.cpython-310.pyc
+[2.729s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/state_machine_node.py to state_machine_node.cpython-310.pyc
+[2.731s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/path_planner_util.py to path_planner_util.cpython-310.pyc
+[2.734s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/state_machine.py to state_machine.cpython-310.pyc
+[2.735s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/__init__.py to __init__.cpython-310.pyc
+[2.735s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/path_finding/path_planner_node.py to path_planner_node.cpython-310.pyc
+[2.738s] byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/ground_truth_odometry.py to ground_truth_odometry.cpython-310.pyc
+[2.739s] running install_data
+[2.740s] creating /ros2_ws/install/prm/share/ament_index
+[2.740s] creating /ros2_ws/install/prm/share/ament_index/resource_index
+[2.740s] creating /ros2_ws/install/prm/share/ament_index/resource_index/packages
+[2.741s] copying resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages
+[2.741s] copying package.xml -> /ros2_ws/install/prm/share/prm
+[2.741s] creating /ros2_ws/install/prm/share/prm/launch
+[2.741s] copying launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.741s] copying launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.741s] copying launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.742s] copying launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.742s] copying launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.742s] creating /ros2_ws/install/prm/share/prm/description
+[2.742s] copying description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description
+[2.743s] creating /ros2_ws/install/prm/share/prm/rviz
+[2.743s] copying rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz
+[2.743s] copying rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz
+[2.743s] creating /ros2_ws/install/prm/share/prm/config
+[2.743s] copying config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config
+[2.744s] creating /ros2_ws/install/prm/share/prm/models
+[2.744s] creating /ros2_ws/install/prm/share/prm/models/Paredes
+[2.744s] copying models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.744s] copying models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.744s] copying models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.745s] creating /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.745s] copying models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.745s] copying models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.745s] copying models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.745s] creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+[2.746s] copying models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+[2.746s] copying models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+[2.746s] creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+[2.747s] copying models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+[2.747s] copying models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+[2.748s] creating /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+[2.748s] copying models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+[2.748s] copying models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+[2.749s] creating /ros2_ws/install/prm/share/prm/world
+[2.749s] copying world/empty.world -> /ros2_ws/install/prm/share/prm/world/
+[2.749s] copying world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.749s] copying world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.750s] copying world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.750s] copying world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.750s] copying world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.751s] copying world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.751s] copying world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.751s] copying world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.752s] running install_egg_info
+[2.756s] Copying build/prm/prm.egg-info to /ros2_ws/install/prm/lib/python3.10/site-packages/prm-0.0.0-py3.10.egg-info
+[2.759s] running install_scripts
+[2.832s] Installing controle_robo script to /ros2_ws/install/prm/lib/prm
+[2.837s] Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm
+[2.837s] Installing path_planner_node script to /ros2_ws/install/prm/lib/prm
+[2.838s] Installing robo_mapper script to /ros2_ws/install/prm/lib/prm
+[2.839s] Installing state_machine_node script to /ros2_ws/install/prm/lib/prm
+[2.839s] Installing tartaruga script to /ros2_ws/install/prm/lib/prm
+[2.840s] writing list of installed files to '/ros2_ws/build/prm/install.log'
+[2.896s] Invoked command in '/ros2_ws' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/prm build --build-base /ros2_ws/build/prm/build install --record /ros2_ws/build/prm/install.log --single-version-externally-managed install_data
