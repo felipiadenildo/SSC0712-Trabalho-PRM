@@ -1,0 +1,75 @@
+running develop
+Removing /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)
+running egg_info
+writing build/prm/prm.egg-info/PKG-INFO
+writing dependency_links to build/prm/prm.egg-info/dependency_links.txt
+writing entry points to build/prm/prm.egg-info/entry_points.txt
+writing requirements to build/prm/prm.egg-info/requires.txt
+writing top-level names to build/prm/prm.egg-info/top_level.txt
+reading manifest file 'build/prm/prm.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'build/prm/prm.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /ros2_ws/build/prm/build
+creating /ros2_ws/build/prm/build/lib
+creating /ros2_ws/build/prm/build/lib/prm
+copying prm/controle_robo.py -> /ros2_ws/build/prm/build/lib/prm
+copying prm/robo_mapper.py -> /ros2_ws/build/prm/build/lib/prm
+copying prm/controle_tartaruga.py -> /ros2_ws/build/prm/build/lib/prm
+copying prm/__init__.py -> /ros2_ws/build/prm/build/lib/prm
+copying prm/ground_truth_odometry.py -> /ros2_ws/build/prm/build/lib/prm
+running install
+running install_lib
+creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+copying /ros2_ws/build/prm/build/lib/prm/controle_robo.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+copying /ros2_ws/build/prm/build/lib/prm/robo_mapper.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+copying /ros2_ws/build/prm/build/lib/prm/controle_tartaruga.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+copying /ros2_ws/build/prm/build/lib/prm/__init__.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+copying /ros2_ws/build/prm/build/lib/prm/ground_truth_odometry.py -> /ros2_ws/install/prm/lib/python3.10/site-packages/prm
+byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_robo.py to controle_robo.cpython-310.pyc
+byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/robo_mapper.py to robo_mapper.cpython-310.pyc
+byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/controle_tartaruga.py to controle_tartaruga.cpython-310.pyc
+byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/__init__.py to __init__.cpython-310.pyc
+byte-compiling /ros2_ws/install/prm/lib/python3.10/site-packages/prm/ground_truth_odometry.py to ground_truth_odometry.cpython-310.pyc
+running install_data
+copying resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages
+copying package.xml -> /ros2_ws/install/prm/share/prm
+copying launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch
+copying launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+copying launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+copying launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch
+copying launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch
+copying description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description
+copying rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz
+copying rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz
+copying config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config
+copying models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes
+copying models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+copying models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+copying models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+copying models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+copying models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+copying models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+copying models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+copying models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+copying models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+copying models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+copying models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+copying world/empty.world -> /ros2_ws/install/prm/share/prm/world/
+copying world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+copying world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+copying world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+copying world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/
+copying world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+copying world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/
+copying world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/
+copying world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+running install_egg_info
+Copying build/prm/prm.egg-info to /ros2_ws/install/prm/lib/python3.10/site-packages/prm-0.0.0-py3.10.egg-info
+running install_scripts
+Installing controle_robo script to /ros2_ws/install/prm/lib/prm
+Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm
+Installing robo_mapper script to /ros2_ws/install/prm/lib/prm
+Installing tartaruga script to /ros2_ws/install/prm/lib/prm
+writing list of installed files to '/ros2_ws/build/prm/install.log'

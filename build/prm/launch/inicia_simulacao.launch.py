@@ -1,0 +1,1 @@
+/ros2_ws/launch/inicia_simulacao.launch.py

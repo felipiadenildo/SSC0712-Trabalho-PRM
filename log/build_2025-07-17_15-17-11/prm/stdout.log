@@ -1,0 +1,66 @@
+running develop
+running egg_info
+creating prm.egg-info
+writing prm.egg-info/PKG-INFO
+writing dependency_links to prm.egg-info/dependency_links.txt
+writing entry points to prm.egg-info/entry_points.txt
+writing requirements to prm.egg-info/requires.txt
+writing top-level names to prm.egg-info/top_level.txt
+writing manifest file 'prm.egg-info/SOURCES.txt'
+reading manifest file 'prm.egg-info/SOURCES.txt'
+writing manifest file 'prm.egg-info/SOURCES.txt'
+running build_ext
+Creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)
+Installing controle_robo script to /ros2_ws/install/prm/lib/prm
+Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm
+Installing robo_mapper script to /ros2_ws/install/prm/lib/prm
+Installing tartaruga script to /ros2_ws/install/prm/lib/prm
+
+Installed /ros2_ws/build/prm
+running symlink_data
+creating /ros2_ws/install/prm/share/ament_index
+creating /ros2_ws/install/prm/share/ament_index/resource_index
+creating /ros2_ws/install/prm/share/ament_index/resource_index/packages
+symbolically linking /ros2_ws/build/prm/resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages
+symbolically linking /ros2_ws/build/prm/package.xml -> /ros2_ws/install/prm/share/prm
+creating /ros2_ws/install/prm/share/prm/launch
+symbolically linking /ros2_ws/build/prm/launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch
+symbolically linking /ros2_ws/build/prm/launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+symbolically linking /ros2_ws/build/prm/launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+symbolically linking /ros2_ws/build/prm/launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch
+symbolically linking /ros2_ws/build/prm/launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch
+creating /ros2_ws/install/prm/share/prm/description
+symbolically linking /ros2_ws/build/prm/description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description
+creating /ros2_ws/install/prm/share/prm/rviz
+symbolically linking /ros2_ws/build/prm/rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz
+symbolically linking /ros2_ws/build/prm/rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz
+creating /ros2_ws/install/prm/share/prm/config
+symbolically linking /ros2_ws/build/prm/config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config
+creating /ros2_ws/install/prm/share/prm/models
+creating /ros2_ws/install/prm/share/prm/models/Paredes
+symbolically linking /ros2_ws/build/prm/models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes
+symbolically linking /ros2_ws/build/prm/models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+symbolically linking /ros2_ws/build/prm/models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+creating /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+creating /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+creating /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+creating /ros2_ws/install/prm/share/prm/world
+symbolically linking /ros2_ws/build/prm/world/empty.world -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/
+symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/

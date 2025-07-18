@@ -1,45 +1,69 @@
 {
+    // --- Configuração Básica do Contêiner ---
+    // O nome que aparecerá no VS Code.
     "name": "ROS 2 Humble - Ambiente Otimizado",
+    // Aponta para o Dockerfile que será usado para construir a imagem.
     "dockerFile": "Dockerfile",
+    // Define o "contexto" da construção, ou seja, o diretório raiz do projeto.
     "context": "..",
-    "workspaceFolder": "/ros2_ws",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind",
 
+    // --- Montagem e Diretório de Trabalho ---
+    // Define o diretório padrão que será aberto no terminal do VS Code.
+    "workspaceFolder": "/home/ros/ros2_ws",
+    // Monta o seu código local dentro do contêiner.
+    // Esta é a forma mais robusta: monta a pasta inteira do seu projeto
+    // (que contém a pasta 'src') para dentro do diretório de trabalho do contêiner.
+    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws,type=bind",
+
+    // --- Argumentos para o 'docker run' ---
+    // Estes são os argumentos que o VS Code passa para o Docker ao iniciar o contêiner.
     "runArgs": [
+        // Concede permissões estendidas ao contêiner, útil para acesso a hardware.
         "--privileged",
+        // Compartilha a rede do host com o contêiner. Facilita a comunicação do ROS.
         "--net=host",
-        "--ipc=host",
+        // Permite que o contêiner acesse a GPU para aceleração gráfica.
         "--gpus=all",
+        // Garante que todas as capacidades do driver NVIDIA estejam disponíveis.
         "--env=NVIDIA_DRIVER_CAPABILITIES=all",
+        // Passa a variável de ambiente DISPLAY do seu computador para o contêiner,
+        // permitindo que as janelas de GUI (Gazebo, RViz) sejam exibidas.
         "--env=DISPLAY=${localEnv:DISPLAY}",
-        "--env=TERM=xterm-256color",
-        "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
-        "--volume=/run/user/$(id -u):/run/user/$(id -u)"
+        // Compartilha o socket X11 do host, essencial para a exibição de GUIs.
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix"
     ],
 
+    // --- Variáveis de Ambiente Dentro do Contêiner ---
     "containerEnv": {
-        "GAZEBO_VERSION": "garden",
-        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
-        "LIBGL_ALWAYS_INDIRECT": "1",
-        "GALLIUM_DRIVER": "llvmpipe",
-        "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/$(id -u)/bus"
+        // Define a implementação de middleware do ROS 2 a ser usada. Fast RTPS é um bom padrão.
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
     },
 
+    // --- Comandos Pós-Criação ---
+    // Executa nosso script de configuração uma vez, logo após o contêiner ser criado.
+    // Este script instala dependências e compila o workspace.
     "postCreateCommand": "/home/ros/scripts/setup-env.sh",
 
+    // --- Customizações do VS Code ---
+    // Configurações e extensões que serão aplicadas apenas dentro deste contêiner.
     "customizations": {
         "vscode": {
+            // Lista de extensões recomendadas que serão instaladas automaticamente.
             "extensions": [
                 "ms-python.python",
-                "ms-iot.vscode-ros", 
+                "ms-iot.vscode-ros",
                 "redhat.vscode-xml",
                 "dotdotdotdot.alignment"
             ],
+            // Configurações específicas do editor para este projeto.
             "settings": {
+                // Define o interpretador Python padrão.
                 "python.defaultInterpreterPath": "/usr/bin/python3",
+                // Habilita a formatação do código ao salvar.
                 "editor.formatOnSave": true,
+                // Informa à extensão do ROS qual distribuição estamos usando.
                 "ros.distro": "humble",
-                "xml.server.enabled": true,
+                // Garante que o terminal padrão aberto no VS Code seja o 'bash'.
                 "terminal.integrated.defaultProfile.linux": "bash"
             }
         }

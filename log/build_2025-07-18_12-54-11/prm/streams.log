@@ -1,0 +1,52 @@
+[1.691s] Invoking command in '/ros2_ws/build/prm': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data --force
+[2.275s] running develop
+[2.661s] running egg_info
+[2.662s] writing prm.egg-info/PKG-INFO
+[2.664s] writing dependency_links to prm.egg-info/dependency_links.txt
+[2.665s] writing entry points to prm.egg-info/entry_points.txt
+[2.665s] writing requirements to prm.egg-info/requires.txt
+[2.665s] writing top-level names to prm.egg-info/top_level.txt
+[2.672s] reading manifest file 'prm.egg-info/SOURCES.txt'
+[2.680s] writing manifest file 'prm.egg-info/SOURCES.txt'
+[2.685s] running build_ext
+[2.686s] Creating /ros2_ws/install/prm/lib/python3.10/site-packages/prm.egg-link (link to .)
+[2.689s] Installing controle_robo script to /ros2_ws/install/prm/lib/prm
+[2.690s] Installing ground_truth_odometry script to /ros2_ws/install/prm/lib/prm
+[2.690s] Installing robo_mapper script to /ros2_ws/install/prm/lib/prm
+[2.691s] Installing tartaruga script to /ros2_ws/install/prm/lib/prm
+[2.692s] 
+[2.692s] Installed /ros2_ws/build/prm
+[2.693s] running symlink_data
+[2.694s] symbolically linking /ros2_ws/build/prm/resource/prm -> /ros2_ws/install/prm/share/ament_index/resource_index/packages
+[2.695s] symbolically linking /ros2_ws/build/prm/package.xml -> /ros2_ws/install/prm/share/prm
+[2.701s] symbolically linking /ros2_ws/build/prm/launch/turtlesim_mimic.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.701s] symbolically linking /ros2_ws/build/prm/launch/carrega_robo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.702s] symbolically linking /ros2_ws/build/prm/launch/editar_mundo.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.702s] symbolically linking /ros2_ws/build/prm/launch/inicia_simulacao.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.702s] symbolically linking /ros2_ws/build/prm/launch/teste_urdf.launch.py -> /ros2_ws/install/prm/share/prm/launch
+[2.703s] symbolically linking /ros2_ws/build/prm/description/robot.urdf.xacro -> /ros2_ws/install/prm/share/prm/description
+[2.703s] symbolically linking /ros2_ws/build/prm/rviz/rviz_config.rviz -> /ros2_ws/install/prm/share/prm/rviz
+[2.704s] symbolically linking /ros2_ws/build/prm/rviz/urdf.rviz -> /ros2_ws/install/prm/share/prm/rviz
+[2.705s] symbolically linking /ros2_ws/build/prm/config/controller_config.yaml -> /ros2_ws/install/prm/share/prm/config
+[2.705s] symbolically linking /ros2_ws/build/prm/models/Paredes/model.config -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.706s] symbolically linking /ros2_ws/build/prm/models/Paredes/paredes.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.707s] symbolically linking /ros2_ws/build/prm/models/Paredes/model.sdf -> /ros2_ws/install/prm/share/prm/models/Paredes
+[2.707s] symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.707s] symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/objetos_cilindrocos.xacro.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.708s] symbolically linking /ros2_ws/build/prm/models/ObstaculosCilindricos/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosCilindricos
+[2.708s] symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.config -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+[2.709s] symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/model.sdf -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena
+[2.709s] symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/hexagon.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+[2.709s] symbolically linking /ros2_ws/build/prm/models/TurtlebotArena/meshes/wall.dae -> /ros2_ws/install/prm/share/prm/models/TurtlebotArena/meshes
+[2.710s] symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.config -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+[2.710s] symbolically linking /ros2_ws/build/prm/models/ObstaculosArenaV1/model.sdf -> /ros2_ws/install/prm/share/prm/models/ObstaculosArenaV1
+[2.710s] symbolically linking /ros2_ws/build/prm/world/empty.world -> /ros2_ws/install/prm/share/prm/world/
+[2.711s] symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.711s] symbolically linking /ros2_ws/build/prm/world/arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.711s] symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.712s] symbolically linking /ros2_ws/build/prm/world/empty.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.712s] symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf.xacro -> /ros2_ws/install/prm/share/prm/world/
+[2.713s] symbolically linking /ros2_ws/build/prm/world/arena_cilindros.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.713s] symbolically linking /ros2_ws/build/prm/world/arena_paredes.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.713s] symbolically linking /ros2_ws/build/prm/world/empty_arena.sdf -> /ros2_ws/install/prm/share/prm/world/
+[2.798s] Invoked command in '/ros2_ws/build/prm' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /ros2_ws/build/prm/build --no-deps symlink_data --force

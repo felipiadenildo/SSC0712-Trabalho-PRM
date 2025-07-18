@@ -1,0 +1,6 @@
+[console_scripts]
+controle_robo = prm.controle_robo:main
+ground_truth_odometry = prm.ground_truth_odometry:main
+robo_mapper = prm.robo_mapper:main
+tartaruga = prm.controle_tartaruga:main
+

@@ -8,64 +8,55 @@ readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
 readonly YELLOW='\033[1;33m'
-readonly NC='\033[0m'
+readonly NC='\033[0m' # No Color
 
 readonly WORKSPACE="/home/ros/ros2_ws"
 readonly LAUNCH_PACKAGE="prm"
 
+source install/setup.bash
+
 # --- Funções ---
 
-start_process() {
+# IMPRIME o comando exato que o usuário deve executar em um novo terminal.
+# Esta abordagem é 100% confiável, pois evita problemas de interpretação de shell.
+print_command_to_run() {
     local name="$1"
-    local command="$2"
+    local ros_command="$2"
     local color="$3"
     
-    echo -e "${color}Iniciando ${name}...${NC}"
-    # CORREÇÃO DEFINITIVA: Força a execução do .bashrc antes de qualquer outro comando.
-    # Isso garante que o ambiente ROS, o workspace local e todos os aliases sejam carregados.
-    terminator -T "${name}" -e "bash -c 'source ~/.bashrc && ${command}; exec bash'" &
+    # Constrói o comando completo que garante que o ambiente seja carregado corretamente.
+    local full_command="source /opt/ros/humble/setup.bash && source ${WORKSPACE}/install/setup.bash && ${ros_command}"
+
+    echo -e "${color}--- Para iniciar o ${name} ---${NC}"
+    echo -e "1. Abra um NOVO terminal no VS Code (clique no ícone '+' ao lado do nome do terminal)."
+    echo -e "2. Copie o comando abaixo, cole no novo terminal e pressione Enter:"
+    echo -e "${YELLOW}${full_command}${NC}\n"
 }
 
+# Para todos os processos relacionados à simulação.
 stop_processes() {
-    echo -e "${RED}Parando todos os processos da simulação...${NC}"
-    local processes_to_kill=(
-        "ros2 launch"
-        "gz sim"
-        "robot_state_publisher"
-        "parameter_bridge"
-    )
-    
-    for proc in "${processes_to_kill[@]}"; do
-        if pgrep -f "${proc}" > /dev/null; then
-            pkill -f "${proc}"
-            echo "Processos contendo '${proc}' finalizados."
-        fi
-    done
-    
-    if pgrep -f "terminator" > /dev/null; then
-        pkill -f "terminator"
-        echo "Janelas do Terminator finalizadas."
-    fi
-
+    echo -e "${RED}Parando todos os processos...${NC}"
+    # O '|| true' evita que o script pare se um processo não for encontrado.
+    pkill -f "ros2 launch" || true
+    pkill -f "gz sim" || true
     echo -e "${GREEN}Processos finalizados.${NC}"
 }
 
+# Mostra como usar o script.
 show_usage() {
-    echo -e "${YELLOW}Uso:${NC} $0 [comando]"
+    echo -e "${YELLOW}Uso:${NC} runapp [comando]"
     echo -e "\nComandos disponíveis:"
-    echo -e "  ${GREEN}sim${NC}          - Inicia a simulação no Gazebo."
-    echo -e "  ${BLUE}ctrl${NC}         - Inicia os nós de controle do robô e RViz."
-    echo -e "  ${YELLOW}both${NC}         - Inicia a simulação e o controle em sequência."
-    echo -e "  ${RED}kill${NC}         - Para todos os processos da simulação."
-    echo -e "  ${YELLOW}custom <file>${NC} - Executa um arquivo de launch personalizado."
+    echo -e "  ${GREEN}sim${NC}          - Mostra o comando para iniciar a simulação."
+    echo -e "  ${BLUE}ctrl${NC}         - Mostra o comando para iniciar o controle do robô."
+    echo -e "  ${RED}kill${NC}         - Para todos os processos ROS e Gazebo."
 }
 
 # --- Execução Principal ---
 
-# Verifica se o ambiente do workspace já foi compilado.
+# Verifica se o workspace foi compilado.
 if [ ! -f "${WORKSPACE}/install/setup.bash" ]; then
     echo -e "${RED}Erro: O workspace ainda não foi compilado.${NC}"
-    echo -e "Por favor, execute o comando '${YELLOW}build${NC}' no terminal primeiro."
+    echo -e "Execute o comando '${YELLOW}build${NC}' primeiro."
     exit 1
 fi
 
@@ -76,31 +67,15 @@ fi
 
 case "$1" in
     sim|simulation)
-        start_process "Simulação (Gazebo)" "ros2 launch ${LAUNCH_PACKAGE} inicia_simulacao.launch.py" "${GREEN}"
+        print_command_to_run "Simulação (Gazebo)" "ros2 launch ${LAUNCH_PACKAGE} inicia_simulacao.launch.py" "${GREEN}"
         ;;
     ctrl|control)
-        start_process "Controle do Robô (RViz, etc.)" "ros2 launch ${LAUNCH_PACKAGE} carrega_robo.launch.py" "${BLUE}"
-        ;;
-    both)
-        start_process "Simulação (Gazebo)" "ros2 launch ${LAUNCH_PACKAGE} inicia_simulacao.launch.py" "${GREEN}"
-        echo "Aguardando 5 segundos para o Gazebo inicializar..."
-        sleep 5
-        start_process "Controle do Robô (RViz, etc.)" "ros2 launch ${LAUNCH_PACKAGE} carrega_robo.launch.py" "${BLUE}"
-        ;;
-    custom)
-        if [ -z "$2" ]; then
-            echo -e "${RED}Erro: Nome do arquivo de launch não especificado.${NC}"
-            show_usage
-            exit 1
-        fi
-        start_process "Launch Personalizado" "ros2 launch ${LAUNCH_PACKAGE} $2" "${YELLOW}"
+        print_command_to_run "Controle do Robô (RViz, etc.)" "ros2 launch ${LAUNCH_PACKAGE} carrega_robo.launch.py" "${BLUE}"
         ;;
     kill|stop)
         stop_processes
         ;;
     *)
-        echo -e "${RED}Erro: Comando '$1' desconhecido.${NC}"
-        show_usage
-        exit 1
+        echo -e "${RED}Erro: Comando '$1' desconhecido.${NC}"; show_usage; exit 1
         ;;
 esac

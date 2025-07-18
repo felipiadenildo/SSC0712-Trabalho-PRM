@@ -1,0 +1,89 @@
+[0.346s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-select', 'prm']
+[0.346s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=['prm'], packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7ad59999b700>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7ad59999ad10>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7ad59999ad10>>, mixin_verb=('build',))
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.721s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.721s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/ros2_ws'
+[0.721s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.722s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.752s] DEBUG:colcon.colcon_core.package_identification:Package '.' with type 'ros.ament_python' and name 'prm'
+[0.752s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.752s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.752s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.752s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.752s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_args' from command line to 'None'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_target' from command line to 'None'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_clean_cache' from command line to 'False'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_clean_first' from command line to 'False'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'cmake_force_configure' from command line to 'False'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'ament_cmake_args' from command line to 'None'
+[0.799s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'catkin_cmake_args' from command line to 'None'
+[0.800s] Level 5:colcon.colcon_core.verb:set package 'prm' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.800s] DEBUG:colcon.colcon_core.verb:Building package 'prm' with the following arguments: {'ament_cmake_args': None, 'build_base': '/ros2_ws/build/prm', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/ros2_ws/install/prm', 'merge_install': False, 'path': '/ros2_ws', 'symlink_install': False, 'test_result_base': None}
+[0.800s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.802s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.803s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/ros2_ws' with build type 'ament_python'
+[0.803s] Level 1:colcon.colcon_core.shell:create_environment_hook('prm', 'ament_prefix_path')
+[0.808s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.808s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.ps1'
+[0.810s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.dsv'
+[0.811s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/ament_prefix_path.sh'
+[0.813s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.813s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.476s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/ros2_ws'
+[1.477s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.477s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.374s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/ros2_ws/build/prm': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /ros2_ws/build/prm/build
+[3.479s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/ros2_ws/build/prm' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /ros2_ws/build/prm/build
+[3.482s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/ros2_ws': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/prm build --build-base /ros2_ws/build/prm/build install --record /ros2_ws/build/prm/install.log --single-version-externally-managed install_data --force
+[4.251s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/ros2_ws' returned '0': PYTHONPATH=/ros2_ws/build/prm/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/prm/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/prm build --build-base /ros2_ws/build/prm/build install --record /ros2_ws/build/prm/install.log --single-version-externally-managed install_data --force
+[4.257s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm' for CMake module files
+[4.258s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm' for CMake config files
+[4.260s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib'
+[4.261s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/bin'
+[4.261s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib/pkgconfig/prm.pc'
+[4.262s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/lib/python3.10/site-packages'
+[4.262s] Level 1:colcon.colcon_core.shell:create_environment_hook('prm', 'pythonpath')
+[4.263s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/pythonpath.ps1'
+[4.264s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/ros2_ws/install/prm/share/prm/hook/pythonpath.dsv'
+[4.265s] INFO:colcon.colcon_core.shell:Creating environment hook '/ros2_ws/install/prm/share/prm/hook/pythonpath.sh'
+[4.266s] Level 1:colcon.colcon_core.environment:checking '/ros2_ws/install/prm/bin'
+[4.266s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(prm)
+[4.267s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.ps1'
+[4.269s] INFO:colcon.colcon_core.shell:Creating package descriptor '/ros2_ws/install/prm/share/prm/package.dsv'
+[4.270s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.sh'
+[4.272s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.bash'
+[4.274s] INFO:colcon.colcon_core.shell:Creating package script '/ros2_ws/install/prm/share/prm/package.zsh'
+[4.276s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/ros2_ws/install/prm/share/colcon-core/packages/prm)
+[4.277s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[4.277s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[4.278s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[4.278s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[4.295s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[4.295s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[4.295s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[4.296s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[4.308s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[4.309s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[4.310s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.ps1'
+[4.314s] INFO:colcon.colcon_core.shell:Creating prefix util module '/ros2_ws/install/_local_setup_util_ps1.py'
+[4.319s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.ps1'
+[4.321s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.sh'
+[4.322s] INFO:colcon.colcon_core.shell:Creating prefix util module '/ros2_ws/install/_local_setup_util_sh.py'
+[4.324s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.sh'
+[4.327s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.bash'
+[4.328s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.bash'
+[4.354s] INFO:colcon.colcon_core.shell:Creating prefix script '/ros2_ws/install/local_setup.zsh'
+[4.355s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/ros2_ws/install/setup.zsh'

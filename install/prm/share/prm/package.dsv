@@ -1,0 +1,6 @@
+source;share/prm/hook/pythonpath.ps1
+source;share/prm/hook/pythonpath.dsv
+source;share/prm/hook/pythonpath.sh
+source;../../build/prm/share/prm/hook/pythonpath_develop.ps1
+source;../../build/prm/share/prm/hook/pythonpath_develop.dsv
+source;../../build/prm/share/prm/hook/pythonpath_develop.sh
