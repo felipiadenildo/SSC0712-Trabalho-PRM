@@ -1,82 +1,131 @@
-import os
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import PathJoinSubstitution, FindExecutable, LaunchConfiguration
+from launch.actions import SetEnvironmentVariable, ExecuteProcess, DeclareLaunchArgument
+from launch.conditions import IfCondition
+
+from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
+import os
+
 def generate_launch_description():
-    # --- Caminhos e Pacotes ---
-    # Encontra o diretório de instalação do pacote 'prm' de forma robusta.
-    pkg_prm = get_package_share_directory('prm')
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
+    # ------------------------------------------------------
+    # Configuração de variáveis de ambiente para o Gazebo
+    # ------------------------------------------------------
+    # A variável GZ_SIM_SYSTEM_PLUGIN_PATH é usada para localizar plugins no Gazebo.
+    # Ela é composta pelo caminho atual e pelo conteúdo de LD_LIBRARY_PATH.
+    gz_env = {
+        'GZ_SIM_SYSTEM_PLUGIN_PATH': ':'.join([
+            os.environ.get('GZ_SIM_SYSTEM_PLUGIN_PATH', default=''),
+            os.environ.get('LD_LIBRARY_PATH', default='')
+        ])
+    }
 
-    # --- Declaração de Argumentos do Launch ---
-    # Permite escolher o mundo a ser carregado via linha de comando.
-    # Ex: ros2 launch prm inicia_simulacao.launch.py world:=arena_paredes.sdf
-    world_arg = DeclareLaunchArgument(
+    # Nível de verbosidade do Gazebo (0: silencioso, 4: mais detalhado)
+    gz_verbosity = '3'
+
+    # ------------------------------------------------------
+    # Caminho para o mundo a ser carregado
+    # ------------------------------------------------------
+
+    # Verifica argumento com o nome do mundo que será simulado
+    world_file_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_prm, 'world', 'empty_arena.sdf'),
-        description='Caminho completo para o arquivo de mundo SDF a ser carregado.'
+        default_value='arena_cilindros.sdf',
+        description='Nome do arquivo .sdf do mundo a ser carregado'
     )
 
-    # --- Inicialização do Simulador Gazebo (Forma Padrão) ---
-    # Inclui o launch file padrão do Gazebo, que é mais flexível.
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py'),
-        ),
-        launch_arguments={
-            # Permite controlar a GUI. Mude para 'true' para modo headless.
-            'headless': 'false', 
-            # Passa o caminho do mundo selecionado para o Gazebo.
-            'world': LaunchConfiguration('world')
-        }.items()
-    )
-    
-    # ===================== INÍCIO DA CORREÇÃO CRÍTICA =====================
+    # Encontra o diretório de instalação do pacote 'prm'.
+    pkg_share = FindPackageShare("prm").find("prm")
 
-    # 1. CARREGA A DESCRIÇÃO DO ROBÔ E OS CONTROLADORES
-    # Inclui o launch file que lida com o URDF, publicadores de estado e ros2_control.
-    carrega_robo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_prm, 'launch', 'carrega_robo.launch.py')
-        )
+    # Nome do arquivo do mundo (SDF) a ser carregado
+
+    # Recupera dos parametros ou utiliza o default
+    world_file_name =  world_file_name = LaunchConfiguration('world')
+
+    # Caminho completo para o arquivo do mundo
+    world_path = PathJoinSubstitution([
+        pkg_share,
+        "world",
+        world_file_name
+    ])
+
+# Alguns teste utilizando cenários já existentes no gazebo
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/sensors_demo.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/heightmap.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/fuel.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/actor_crowd.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/auv_controls.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/buoyancy.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/fuel_textured_mesh.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/visualize_lidar.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/segmentation_camera.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/boundingbox_camera.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/spherical_coordinates.sdf'
+#    world_path='/usr/share/ignition/ignition-gazebo6/worlds/rolling_shapes.sdf'
+
+    # ------------------------------------------------------
+    # Inicialização do simulador Gazebo
+    # ------------------------------------------------------
+    # Executa o comando: ign gazebo -r -v <verbosity> <world_path>
+    # Inicia o Gazebo em modo headless (sem GUI), com nível de log definido.
+    gazebo = ExecuteProcess(
+        cmd=['ruby', FindExecutable(name="ign"), 'gazebo', '-s', '-r', '-v', gz_verbosity, world_path],
+        output='screen',
+        additional_env=gz_env,
+        shell=False,
     )
 
-    # 2. INVOCA O ROBÔ NO MUNDO
-    # Executa o nó 'spawn_entity' do Gazebo para adicionar o robô na simulação.
-    # Ele lê a descrição do robô do tópico '/robot_description'.
-    spawn_entity = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', '-entity', 'prm_robot'],
-        output='screen'
+    # ------------------------------------------------------
+    # Configuração do caminho de recursos do Gazebo
+    # ------------------------------------------------------
+    # Define a variável de ambiente IGN_GAZEBO_RESOURCE_PATH para que o Gazebo
+    # consiga localizar os modelos personalizados armazenados no pacote.
+    gz_models_path = ":".join([
+        pkg_share,
+        os.path.join(pkg_share, "models")
+    ])
+
+    gz_set_env = SetEnvironmentVariable(
+        name="IGN_GAZEBO_RESOURCE_PATH",
+        value=gz_models_path,
     )
-    
-    # ====================== FIM DA CORREÇÃO CRÍTICA =======================
-    
-    # --- Ponte Gazebo <-> ROS 2 (Bridge) ---
-    # Necessária para que o ROS 2 receba dados de sensores e do relógio do Gazebo.
+
+    # ------------------------------------------------------
+    # Ponte Gazebo <-> ROS 2
+    # ------------------------------------------------------
+    # Estabelece comunicação entre a câmera do céu no Gazebo e o ROS 2.
     bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
+        name="ros_gz_bridge_world",
         arguments=[
-            # Necessário para controladores como o diff_drive_controller
+            "/sky_cam@sensor_msgs/msg/Image@ignition.msgs.Image",
+            # Necessário para controladores como diff_drive_controller
             "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock"
-            # Adicione outros tópicos aqui se precisar (ex: /odom, /scan)
         ],
         output="screen",
     )
+    
+        # ------------------------------------------------------
+    # Nó de Teste da Garra
+    # ------------------------------------------------------
+    # Este nó é apenas para a Etapa 1 e pode ser desativado depois.
+    gripper_test_node = Node(
+        package='prm', # Substitua 'prm' pelo nome do seu pacote, se for diferente
+        executable='test_gripper',
+        name='gripper_test_node',
+        output='screen'
+    )
 
-    # --- Descrição Completa do Lançamento ---
-    # Retorna a lista de todas as ações que devem ser executadas.
-    # A ordem importa: o Gazebo deve iniciar antes de tentarmos adicionar o robô.
+    # ------------------------------------------------------
+    # Descrição completa do lançamento
+    # ------------------------------------------------------
+    # Inclui as configurações de ambiente, a ponte e o lançamento do Gazebo.
     return LaunchDescription([
-        world_arg,
+        world_file_arg,
+        gz_set_env,
+        bridge,
         gazebo,
-        carrega_robo, # Carrega a descrição do robô na memória
-        spawn_entity, # Adiciona o robô na simulação
-        bridge        # Inicia a ponte de comunicação
+        # gripper_test_node
     ])

@@ -8,12 +8,14 @@
     "context": "..",
 
     // --- Montagem e Diretório de Trabalho ---
-    // Define o diretório padrão que será aberto no terminal do VS Code.
-    "workspaceFolder": "/ros2_ws",
-    // Monta o seu código local dentro do contêiner.
-    // Esta é a forma mais robusta: monta a pasta inteira do seu projeto
-    // (que contém a pasta 'src') para dentro do diretório de trabalho do contêiner.
-    "workspaceMount": "source=${localWorkspaceFolder},target=/ros2_ws/src/prm,type=bind",
+    // ✅ EDIÇÃO: O diretório de trabalho agora aponta para dentro do 'home' do usuário 'ros'.
+    // Esta é a localização correta, onde o usuário 'ros' tem permissão de escrita.
+    "workspaceFolder": "/home/ros/ros2_ws",
+
+    // ✅ EDIÇÃO: Monta seu código local no 'target' (alvo) correto.
+    // O código do seu projeto será espelhado em /home/ros/ros2_ws/src/prm,
+    // exatamente onde o 'colcon' espera encontrar os pacotes.
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros/ros2_ws/src/prm,type=bind",
 
     // --- Argumentos para o 'docker run' ---
     // Estes são os argumentos que o VS Code passa para o Docker ao iniciar o contêiner.
@@ -24,6 +26,7 @@
         "--net=host",
         // Permite que o contêiner acesse a GPU para aceleração gráfica.
         "--gpus=all",
+        // "--group-add", "render",
         // Garante que todas as capacidades do driver NVIDIA estejam disponíveis.
         "--env=NVIDIA_DRIVER_CAPABILITIES=all",
         // Passa a variável de ambiente DISPLAY do seu computador para o contêiner,
@@ -42,6 +45,7 @@
     // --- Comandos Pós-Criação ---
     // Executa nosso script de configuração uma vez, logo após o contêiner ser criado.
     // Este script instala dependências e compila o workspace.
+    // O caminho está correto, pois o Dockerfile coloca os scripts em /home/ros/scripts.
     "postCreateCommand": "/home/ros/scripts/setup-env.sh",
 
     // --- Customizações do VS Code ---

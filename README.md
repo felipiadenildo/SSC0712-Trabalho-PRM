@@ -1,95 +1,109 @@
 # PRM - Programação de Robôs Móveis
 
-**Disciplina SSC0712**  
-Oferecida para os cursos de Engenharia de Computação e áreas afins na **USP São Carlos**
+**Disciplina SSC0712** Oferecida para os cursos de Engenharia de Computação e áreas afins na **USP São Carlos**
 
 Este repositório contém o material da disciplina *Programação de Robôs Móveis*, focada no desenvolvimento de soluções em robótica móvel utilizando **ROS 2 Humble** e o simulador **Gazebo Fortress**.
 
-## 📦 Tecnologias utilizadas
+Felipi Adenildo Soares Sousa 10438790
+Gustavo Wadas Lopes 12745640
 
-- ROS 2 Humble
-- Gazebo Fortress
-- Python
-- RViz / Gazebo GUI
-- [teleop_twist_keyboard](https://github.com/ros2/teleop_twist_keyboard)
+## Como Funciona
 
----
+Este projeto implementa um sistema autônomo de "captura da bandeira" utilizando uma arquitetura modular baseada em nós do ROS 2. Cada nó tem uma responsabilidade específica, comunicando-se através de tópicos para executar a missão.
 
-## 🚀 Como utilizar o pacote
+  * **Nó de Visão (`vision_node`)**: Atua como os "olhos" do robô. Ele processa o feed da câmera para detectar a **bandeira azul** e a **base amarela** usando máscaras de cor e publica a localização desses objetos (em coordenadas de pixel) em tópicos dedicados.
 
-### 1. Clonar o repositório
+  * **Nó Planejador de Caminho (`path_planner_node`)**: É o "navegador". Ele escuta por um alvo (coordenadas no mundo) e, utilizando o mapa de ocupação gerado pelo robô, calcula a rota mais segura e eficiente usando um algoritmo customizado. O caminho resultante é publicado como uma sequência de pontos.
 
-Acesse a pasta `src` do seu workspace ROS 2:
+  * **Nó da Máquina de Estados (`state_machine_node`)**: É o "cérebro" da operação. Ele orquestra a missão inteira, decidindo o que fazer com base no estado atual e nos dados dos outros nós. Ele comanda o robô para procurar a bandeira, solicita um caminho ao planejador, segue o caminho, controla a garra para captura e, finalmente, retorna à base para depositar a bandeira.
 
-```bash
-cd ~/ros2_ws/src/
-git clone https://github.com/matheusbg8/prm.git
-````
+## Como Executar a Missão
 
-### 2. Instalar dependências
+Para executar a missão completa do robô, siga os passos abaixo. É necessário que o ambiente ROS 2 já esteja configurado e que todas as dependências do projeto tenham sido instaladas. Os comandos devem ser executados a partir da raiz do seu workspace (ex: `~/ros2_ws`).
 
-Instale as dependências do pacote com:
+### Passo 1: Compilar o Workspace
+
+Antes de executar, você precisa compilar todos os pacotes do projeto. Este comando cria os executáveis e os arquivos de configuração necessários na pasta `install`.
 
 ```bash
-cd ~/ros2_ws
-rosdep install --from-paths src --ignore-src -r -y
+colcon build
 ```
 
-> Certifique-se de ter rodado previamente `sudo rosdep init` e `rosdep update`, se for a primeira vez usando o `rosdep`.
+### Passo 2: Habilitar o Ambiente
 
-### 3. Compilar o workspace
-
-Certifique-se de estar na **raiz do seu workspace** (geralmente `~/ros2_ws`) antes de compilar:
+Após compilar, você deve "habilitar" o ambiente para que o ROS 2 saiba onde encontrar seus pacotes e executáveis. **Este passo é crucial e deve ser repetido para cada novo terminal que você abrir.**
 
 ```bash
-cd ~/ros2_ws
-colcon build --symlink-install --packages-select prm
+source install/setup.bash
 ```
 
-### 4. Atualizar o ambiente do terminal
+### Passo 3: Iniciar os Nós em Ordem
 
-```bash
-source install/local_setup.bash
-```
+A execução requer **5 terminais separados**. Abra cada um, navegue até a raiz do workspace (`cd ~/ros2_ws`) e execute o comando `source install/setup.bash` em cada um antes de rodar os comandos abaixo.
 
----
+1.  **Terminal 1 - Iniciar o Mundo (Gazebo):**
+    Este comando carrega o cenário da simulação, mas ainda sem o robô.
 
-## 🧪 Executando a simulação
+    ```bash
+    ros2 launch prm inicia_simulacao.launch.py world:=empty_arena.sdf
+    ```
 
-### 1. Iniciar o mundo no Gazebo
+2.  **Terminal 2 - Carregar o Robô:**
+    Este comando adiciona o robô ao mundo, carrega seus controladores (rodas e garra) e inicia o RViz para visualização.
 
-```bash
-ros2 launch prm inicia_simulacao.launch.py
-```
+    ```bash
+    ros2 launch prm carrega_robo.py
+    ```
 
-### 2. Carregar o robô no ambiente
+3.  **Terminal 3 - Iniciar o Planejador de Caminho:**
+    Este nó ficará aguardando por solicitações de caminho.
 
-Em um **novo terminal** (não se esqueça de `source install/local_setup.bash`):
+    ```bash
+    ros2 run prm path_planner_node
+    ```
 
-```bash
-ros2 launch prm carrega_robo.launch.py
-```
+4.  **Terminal 4 - Iniciar o Nó de Visão:**
+    Este nó começará a processar as imagens da câmera do robô.
 
-### 3. Controle automático (demonstração)
+    ```bash
+    ros2 run prm vision_node
+    ```
 
-Em outro terminal:
+5.  **Terminal 5 - Iniciar a Máquina de Estados (Início da Missão):**
+    Este é o último comando. Ele inicia a lógica central que fará o robô se mover e executar a missão de captura da bandeira.
 
-```bash
-ros2 run prm controle_robo
-```
+    ```bash
+    ros2 run prm state_machine_node
+    ```
 
-### 4. **Controle manual (alternativa ao passo 3)**
+Agora, o robô deve começar a procurar pela bandeira e executar a missão de forma autônoma.
 
-Você pode controlar o robô usando o teclado, como alternativa ao controle automático:
+-----
 
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
-```
+### Adendo: Otimização para Desempenho (Modo Headless)
 
-#### Instalar `teleop_twist_keyboard` (caso não esteja disponível)
+Para computadores com recursos limitados, rodar a interface gráfica do Gazebo pode consumir muita performance. É possível iniciar apenas o servidor de simulação (a parte que calcula a física), sem a parte visual, economizando recursos.
 
-```bash
-sudo apt install ros-humble-teleop-twist-keyboard
-```
+Para isso, adicione a flag `-s` (server-only) ao comando de inicialização do Gazebo.
 
-> **Importante**: execute **o passo 3 *ou* o passo 4**, dependendo se deseja usar o controle automático ou manual.
+**Ação:**
+
+1.  Abra o arquivo `launch/inicia_simulacao.launch.py`.
+
+2.  Localize a seção `ExecuteProcess` que inicia o Gazebo.
+
+3.  Adicione `'-s',` à lista `cmd`, como mostrado abaixo:
+
+    ```python
+    # Dentro de inicia_simulacao.launch.py
+
+    gazebo = ExecuteProcess(
+        # Adicione o '-s' para rodar sem a GUI (headless)
+        cmd=['ruby', FindExecutable(name="ign"), 'gazebo', '-r', '-s', '-v', gz_verbosity, world_path],
+        output='screen',
+        additional_env=gz_env,
+        shell=False,
+    )
+    ```
+
+Ao lançar a simulação com esta alteração, a janela do Gazebo não abrirá, mas você ainda poderá ver o robô e o mapa através do **RViz**, que é muito mais leve.

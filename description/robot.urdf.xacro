@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <robot name="prm_robot"
   xmlns:xacro="http://ros.org/wiki/xacro">
+  
 
   <!-- Definicao de Algumas Contantes -->
 
@@ -62,6 +63,7 @@
         <color rgba="0.09 0.30 0.46 1.0"/>
       </material>
     </visual>
+    
 
     <collision>
       <geometry>
@@ -75,6 +77,11 @@
   <!-- Definindo a Base do Robô (base footprint) -->
   <link name="base_footprint">
     <xacro:box_inertia m="0" w="0" d="0" h="0"/>
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/> 
+    </joint>
   </link>
 
   <joint name="base_joint" type="fixed">
