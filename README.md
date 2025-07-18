@@ -45,7 +45,7 @@ A execução requer **5 terminais separados**. Abra cada um, navegue até a raiz
     Este comando carrega o cenário da simulação, mas ainda sem o robô.
 
     ```bash
-    ros2 launch prm inicia_simulacao.launch.py world:=empty_arena.sdf
+    ros2 launch prm inicia_simulacao.launch.py world:=arena_cilindros.sdf
     ```
 
 2.  **Terminal 2 - Carregar o Robô:**
