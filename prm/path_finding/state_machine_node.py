@@ -35,7 +35,7 @@ class StateMachineNode(Node):
         self.gripper_pub_ = self.create_publisher(Float64MultiArray, '/gripper_controller/commands', 10)
         
         # --- Subscribers ---
-        self.odom_sub_ = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+        self.odom_sub_ = self.create_subscription(Odometry, '/odom_gt', self.odom_callback, 10)
         self.flag_vision_sub_ = self.create_subscription(Point, '/vision/flag_position', self.flag_vision_callback, 10)
         self.path_sub_ = self.create_subscription(Path, '/robot/path', self.path_callback, 10)
         # ✅ NOVO: Subscriber para o LaserScan

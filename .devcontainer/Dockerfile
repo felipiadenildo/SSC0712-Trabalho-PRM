@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     # Editores e utilitários de conveniência
     vim \
     terminator \
+    tmux \
     # Utilitários gráficos e bibliotecas para OpenGL
     mesa-utils \
     libgl1-mesa-glx \

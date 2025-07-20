@@ -1,11 +1,12 @@
 # prm/path_finding/path_planner_node.py
 
 import rclpy
+
 from rclpy.node import Node
 import numpy as np
-from nav_msgs.msg import OccupancyGrid, Path
 from geometry_msgs.msg import PoseStamped, Point
 from .path_planner_util import find_path, convert_occupancy_grid_to_map
+from nav_msgs.msg import Odometry, Path, OccupancyGrid
 
 class PathPlannerNode(Node):
     def __init__(self):
@@ -19,6 +20,7 @@ class PathPlannerNode(Node):
         self.current_map = None
         self.map_resolution = 0.0
         self.map_origin = None
+        self.robot_pose = None  # Posição do robô, se necessário
         
         # --- Subscribers ---
         # Assina o tópico do mapa para ter sempre a visão mais recente do mundo
@@ -37,6 +39,13 @@ class PathPlannerNode(Node):
             10
         )
         
+        # Assina o tópico de odometria para obter a posição do robô
+        self.odom_subscriber = self.create_subscription(
+            Odometry,
+            '/odom_gt',  # Usamos a odometria para saber a posição atual
+            self.odom_callback,
+            10)
+        
         # --- Publishers ---
         # Publica o caminho encontrado como uma mensagem nav_msgs/Path
         self.path_publisher = self.create_publisher(Path, '/robot/path', 10)
@@ -51,6 +60,10 @@ class PathPlannerNode(Node):
         self.map_origin = msg.info.origin
         self.get_logger().info(f"Dimensões do mapa: {self.current_map.shape}, Resolução: {self.map_resolution:.3f} m/pixel")
 
+    def odom_callback(self, msg: Odometry):
+        """Callback para armazenar a pose mais recente do robô."""
+        self.robot_pose = msg.pose.pose
+    
     def world_to_map_coords(self, world_point: Point):
         """ Converte coordenadas do mundo (em metros) para coordenadas do mapa (em pixels). """
         if self.map_origin is None or self.map_resolution == 0:
@@ -85,7 +98,7 @@ class PathPlannerNode(Node):
         # Pega a posição do robô (ponto de partida) - por enquanto, vamos fixar um valor
         # No futuro, isso virá da odometria
         # NOTA: O ideal é receber o ponto de partida junto com o alvo.
-        start_world = Point(x=0.0, y=0.0, z=0.0) # Placeholder!
+        start_world = self.robot_pose.position # Posição atual do robô
         goal_world = msg.pose.position
 
         start_map = self.world_to_map_coords(start_world)
