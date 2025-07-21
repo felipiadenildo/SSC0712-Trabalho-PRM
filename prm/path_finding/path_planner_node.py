@@ -53,7 +53,8 @@ class PathPlannerNode(Node):
         self.map_data = np.array(msg.data).reshape((self.map_height, self.map_width))
         
         # Inicializa a classe A* com o mapa pronto
-        self.a_star = AStar(self.map_data)
+        safety_radius_in_cells = 5
+        self.a_star = AStar(self.map_data, safety_radius_cells=safety_radius_in_cells)
         self.get_logger().info(f"Mapa processado. Dimensões: {self.map_data.shape}. A* inicializado.")
 
     def odom_callback(self, msg: Odometry):

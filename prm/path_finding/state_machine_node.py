@@ -23,11 +23,11 @@ class StateMachineNode(Node):
         self.sequence_start_time = None
         self.sequence_step = 0
 
-        self.base_pose = Point(x=-2.0, y=1.0, z=0.0)
+        self.base_pose = Point(x=-8.0, y=-0.5, z=0.0)
         self.flag_known_pose = Point(x=2.5, y=-2.5, z=0.0)
 
         self.look_ahead_dist = 0.4
-        self.linear_velocity_following = 0.2
+        self.linear_velocity_following = 0.13
         self.angular_gain = 0.8
 
         self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)

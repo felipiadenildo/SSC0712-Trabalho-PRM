@@ -33,18 +33,17 @@ class RoboMapperNode(Node):
         self.create_subscription(Odometry, '/odom_gt', self.odom_callback, 10)
         self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
 
-        # --- Configurações do Mapa ---
-        self.map_resolution = 0.05  # 5 cm por célula
-        self.map_width = 200        # Largura em células (200 * 0.05 = 10 metros)
-        self.map_height = 200       # Altura em células (200 * 0.05 = 10 metros)
+        self.map_resolution = 0.05      # 5 cm por célula
+        self.map_width = 400            # Largura em células (400 * 0.05 = 20 metros)
+        self.map_height = 400           # Altura em células (400 * 0.05 = 20 metros)
         
         # Inicializa a grelha do mapa.
         # -1: Desconhecido, 0: Livre, 100: Ocupado
         self.map_data = np.full((self.map_height, self.map_width), -1, dtype=np.int8)
 
         # Posição da origem do mapa no mundo
-        self.map_origin_x = -self.map_width / 2.0 * self.map_resolution
-        self.map_origin_y = -self.map_height / 2.0 * self.map_resolution
+        self.map_origin_x = -self.map_width / 2.0 * self.map_resolution   # Origem em x = -10.0 metros
+        self.map_origin_y = -self.map_height / 2.0 * self.map_resolution  # Origem em y = -10.0 metros
         
         # Variáveis para a posição do robô
         self.robot_x = 0.0
