@@ -103,6 +103,8 @@ class RoboMapperNode(Node):
         """
         Callback principal que processa os dados do Lidar para atualizar o mapa.
         """
+        # Verificar se houve mudanças significativas
+        old_map = self.map_data.copy()
         if self.robot_pose_x is None:
             # Não podemos mapear sem saber onde o robô está.
             return

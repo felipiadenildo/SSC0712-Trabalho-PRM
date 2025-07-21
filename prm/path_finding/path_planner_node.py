@@ -155,8 +155,18 @@ class PathPlannerNode(Node):
         if path_grid:
             self.get_logger().info(f"✅ Caminho encontrado com {len(path_grid)} pontos. Publicando...")
             self.publish_path(path_grid, msg.header.frame_id)
-        else:
-            self.get_logger().warn("⚠️ Não foi possível encontrar um caminho para o alvo especificado.")
+        if not path_grid:
+            self.get_logger().error("Caminho não encontrado! Expandindo área de busca...")
+            # Tentar aumentar o raio de segurança
+            self.safety_radius += 2
+            self.a_star = AStar(self.map_data, safety_radius_cells=self.safety_radius)
+            path_grid = self.a_star.find_path(start_grid, goal_grid)
+            
+            if path_grid:
+                self.publish_path(path_grid, msg.header.frame_id)
+            else:
+                self.get_logger().error("Impossível encontrar caminho mesmo com raio expandido!")
+
 
     def publish_path(self, path_grid, frame_id: str):
         """

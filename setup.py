@@ -59,10 +59,10 @@ setup(
     entry_points={
         'console_scripts': [
             # --- Nós Utilitários e de Teste (Mantidos) ---
-            'tartaruga = prm.controle_tartaruga:main',
+            # 'tartaruga = prm.controle_tartaruga:main',
             'ground_truth_odometry = prm.ground_truth_odometry:main',
             'robo_mapper = prm.robo_mapper:main',
-            'test_gripper = prm.test_gripper:main',
+            # 'test_gripper = prm.test_gripper:main',
 
             # --- Nós Principais do Robô (Atualizados) ---
             # Formato: 'nome_executavel = pacote_python.nome_arquivo:main'

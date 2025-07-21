@@ -117,6 +117,9 @@ class StateMachineNode(Node):
         
         self.get_logger().info(f"✅ Máquina de Estados iniciada. Estado inicial: {self.state.name}")
 
+        self.prev_error = 0.0
+        self.integral = 0.0
+
     def _load_parameters(self):
         """Carrega todos os parâmetros ROS para variáveis de instância."""
         # Tópicos
@@ -237,6 +240,17 @@ class StateMachineNode(Node):
 
         # --- ESTADO 2: SEGUINDO O CAMINHO (PURE PURSUIT) ---
         elif self.state == State.FOLLOWING_PATH:
+            if self.laser_ranges:
+                # Ângulo de 60° à frente (considerando 360 leituras)
+                front_cone = self.laser_ranges[:30] + self.laser_ranges[-30:]
+                min_distance = min(front_cone)
+                
+                if min_distance < 0.5:  # 50cm de limite de segurança
+                    self.move_robot(0.0, 0.0)
+                    self.get_logger().warn("Obstáculo detectado! Replanejando...")
+                    self.publish_goal(self.current_goal)
+                    self.change_state(State.WAITING_FOR_PATH)
+                    return
             if self.current_path is None:
                 self.move_robot(0.0, 0.0)
                 return
@@ -282,9 +296,17 @@ class StateMachineNode(Node):
                 return
 
             # 2. Centralização com a câmera
-            if self.flag_pixel_pos is None: # Se não vê a bandeira, gira para procurar
-                self.move_robot(0.0, self.p_search_rot_vel)
-                return
+            if self.flag_pixel_pos is not None:
+                error = self.flag_pixel_pos - self.p_image_center
+                
+                # Controle PID
+                P = error * 0.01
+                self.integral += error * 0.005
+                D = (error - self.prev_error) * 0.002
+                self.prev_error = error
+                
+                angular_vel = P + self.integral + D
+                self.move_robot(self.p_align_lin_vel, angular_vel)
 
             error = self.flag_pixel_pos - self.p_image_center
             if abs(error) > self.p_pixel_tolerance: # Se está desalinhado, corrige a rotação
@@ -325,19 +347,32 @@ class StateMachineNode(Node):
     # --- Funções Auxiliares da Lógica ---
 
     def _find_target_point(self) -> Point | None:
-        """Encontra o ponto alvo no caminho para o algoritmo Pure Pursuit."""
-        if self.current_path is None or not self.current_path.poses:
+        """Encontra o ponto alvo ideal usando busca binária."""
+        if not self.current_path.poses:
             return None
             
-        robot_x, robot_y = self.robot_pose.position.x, self.robot_pose.position.y
+        robot_pos = (self.robot_pose.position.x, self.robot_pose.position.y)
+        low, high = 0, len(self.current_path.poses) - 1
         
-        # Itera do final para o começo do caminho para encontrar o primeiro ponto
-        # que está à frente do robô e a uma distância maior que o look_ahead.
-        for point in reversed(self.current_path.poses):
-            dist = math.dist((robot_x, robot_y), (point.pose.position.x, point.pose.position.y))
-            if dist > self.p_look_ahead_dist:
-                return point.pose.position
-        return None # Se nenhum ponto for encontrado, retorna None
+        # Busca binária para encontrar segmento mais próximo
+        while high - low > 1:
+            mid = (low + high) // 2
+            mid_point = self.current_path.poses[mid].pose.position
+            dist_mid = math.dist(robot_pos, (mid_point.x, mid_point.y))
+            
+            if dist_mid < self.p_look_ahead_dist:
+                low = mid
+            else:
+                high = mid
+        
+        # Encontrar ponto exato no segmento
+        for i in range(low, min(high + 1, len(self.current_path.poses))):
+            point = self.current_path.poses[i].pose.position
+            dist = math.dist(robot_pos, (point.x, point.y))
+            if dist >= self.p_look_ahead_dist:
+                return point
+        
+        return self.current_path.poses[-1].pose.position
 
     def _execute_timed_sequence(self, steps: list[tuple[float, callable]]):
         """Executa uma lista de ações baseadas no tempo decorrido."""
