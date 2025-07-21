@@ -172,6 +172,12 @@ def generate_launch_description():
             # parameters=[{'use_sim_time': use_sim_time}]
         )
     
+    robot_path_node= Node(
+            package='prm',
+            executable='robot_path_node',   # o nome que você registrou no setup.py
+            name='robot_path_node',
+            output='screen',
+        )
     
     # --- 4. ORDEM DE EXECUÇÃO E EVENTOS ---
     return LaunchDescription(declared_arguments + [
@@ -184,6 +190,7 @@ def generate_launch_description():
         relay_cmd_vel,
         rviz_node,
         rviz_node_2,
+        robot_path_node,
         
         # Handlers que garantem a sequência correta de carregamento dos controladores
         RegisterEventHandler(

@@ -15,41 +15,44 @@ Visualization Manager:
   Enabled: true
 
   Global Options:
-    Fixed Frame: map    # quadro de referência
+    Fixed Frame: map      # ← voltou pra 'map'
     Frame Rate: 30
     Background Color: 48; 48; 48
 
   Displays:
-    # Grade
     - Name: Grid
       Class: rviz_default_plugins/Grid
       Enabled: true
       Plane: XY
       Cell Size: 1
 
-    # Mapa de ocupação
     - Name: Map
       Class: rviz_default_plugins/Map
       Enabled: true
-      Topic: /map
+      Topic: /map        # seu mapa deve estar neste tópico
       Color Scheme: map
       Alpha: 0.7
 
-    # Caminho planejado
-    - Name: Path
+    - Name: AStar Path
       Class: rviz_default_plugins/Path
       Enabled: true
-      Topic: /robot/path
+      Topic: /robot/path    # caminho planejado pelo A*
       Style: Lines
       Color: 255; 0; 0
 
-    # Modelo do robô como retângulo 2D
+    - Name: Actual Path
+      Class: rviz_default_plugins/Path
+      Enabled: true
+      Topic: /robot/actual_path   # caminho real que o robô está seguindo
+      Style: Lines
+      Color: 0; 255; 0
+
     - Name: RobotModel
       Class: rviz_default_plugins/RobotModel
       Enabled: true
-      Robot Description: robot_description   # certifique-se de ter publicado o parâmetro /robot_description
-      Visual Enabled: false                 # desliga o visual 3D
-      Collision Enabled: true               # usa a collision para mostrar footprint
+      Robot Description: robot_description
+      Visual Enabled: false
+      Collision Enabled: true
       Alpha: 1.0
 
   Tools:
@@ -61,6 +64,7 @@ Visualization Manager:
     Current:
       Class: rviz_default_plugins/TopDownOrtho
       Name: Top‑Down View
-      Target Frame: map
-      Scale: 10        # quanto de área aparece na tela (10 m × 10 m)
+      Target Frame: map     # ← frame de destino também 'map'
+      Scale: 10             # metros mostrados na vista
     Saved: ~
+

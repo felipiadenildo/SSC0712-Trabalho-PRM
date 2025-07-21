@@ -69,7 +69,7 @@ setup(
             'state_machine_node = prm.path_finding.state_machine_node:main', 
             'path_planner_node = prm.path_finding.path_planner_node:main',
             'vision_node = prm.vision_node:main',
-            
+            'robot_path_node = prm.robot_path_node:main',
         ],
     },
 )
