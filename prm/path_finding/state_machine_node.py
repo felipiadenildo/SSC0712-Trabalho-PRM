@@ -18,15 +18,20 @@
 import rclpy
 from rclpy.node import Node
 import math
+import os
+import psutil
+from datetime import datetime, timedelta
 
 # Importações de Mensagens ROS
 from geometry_msgs.msg import Twist, PoseStamped, Point
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Float32, Float64MultiArray
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 
 # Importações de Qualidade de Serviço (QoS)
 from rclpy.qos import QoSProfile, DurabilityPolicy, HistoryPolicy, ReliabilityPolicy
+from rclpy.duration import Duration
 
 # Importa a definição dos estados
 from .state_machine import State
@@ -86,10 +91,19 @@ class StateMachineNode(Node):
         self.goal_published = False    # Flag para controlar publicações de alvo
         self.sequence_start_time = None # Temporizador para sequências de ações
         self.sequence_step = 0          # Passo atual em uma sequência
+        self.state_start_time = self.get_clock().now()  # Tempo de entrada no estado atual
+        self.current_goal = None        # Armazena o objetivo atual
+        self.prev_error = 0.0           # Erro anterior para controle PID
+        self.integral = 0.0             # Termo integral para controle PID
+        self.recovery_start_time = None # Tempo de início da recuperação
 
         # --- Qualidade de Serviço (QoS) ---
         # Perfil para dados que devem ser recebidos confiavelmente
-        qos_reliable = QoSProfile(reliability=ReliabilityPolicy.RELIABLE, history=HistoryPolicy.KEEP_LAST, depth=10)
+        qos_reliable = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE, 
+            history=HistoryPolicy.KEEP_LAST, 
+            depth=10
+        )
         
         # Perfil para "latched topics" (tópicos travados), como o alvo e o mapa.
         # Garante que a última mensagem seja guardada e entregue a qualquer nó que se conecte depois.
@@ -115,10 +129,11 @@ class StateMachineNode(Node):
         # O timer dispara a execução da máquina de estados a 10Hz (a cada 0.1s)
         self.timer = self.create_timer(0.1, self.execute_state_machine)
         
+        # --- Timer de Diagnóstico ---
+        self.diagnostic_pub = self.create_publisher(DiagnosticArray, '/diagnostics', 10)
+        self.timer_diag = self.create_timer(5.0, self.publish_diagnostics)
+        
         self.get_logger().info(f"✅ Máquina de Estados iniciada. Estado inicial: {self.state.name}")
-
-        self.prev_error = 0.0
-        self.integral = 0.0
 
     def _load_parameters(self):
         """Carrega todos os parâmetros ROS para variáveis de instância."""
@@ -132,24 +147,65 @@ class StateMachineNode(Node):
         self.p_flag_detection_topic = self.get_parameter('flag_detection_topic').value
         
         # Posições
-        self.flag_known_pose = Point(x=self.get_parameter('flag_known_pose.x').value, y=self.get_parameter('flag_known_pose.y').value, z=0.0)
-        self.base_pose = Point(x=self.get_parameter('base_pose.x').value, y=self.get_parameter('base_pose.y').value, z=0.0)
+        self.flag_known_pose = Point(
+            x=float(self.get_parameter('flag_known_pose.x').value),
+            y=float(self.get_parameter('flag_known_pose.y').value),
+            z=0.0
+        )
+        self.base_pose = Point(
+            x=float(self.get_parameter('base_pose.x').value),
+            y=float(self.get_parameter('base_pose.y').value),
+            z=0.0
+        )
         
         # Pure Pursuit
-        self.p_look_ahead_dist = self.get_parameter('look_ahead_dist').value
-        self.p_linear_velocity = self.get_parameter('path_linear_velocity').value
-        self.p_angular_gain = self.get_parameter('path_angular_gain').value
-        self.p_goal_tolerance = self.get_parameter('goal_tolerance').value
+        self.p_look_ahead_dist = float(self.get_parameter('look_ahead_dist').value)
+        self.p_linear_velocity = float(self.get_parameter('path_linear_velocity').value)
+        self.p_angular_gain = float(self.get_parameter('path_angular_gain').value)
+        self.p_goal_tolerance = float(self.get_parameter('goal_tolerance').value)
 
         # Alinhamento
-        self.p_align_dist = self.get_parameter('alignment_dist_laser').value
-        self.p_image_center = self.get_parameter('alignment_image_width').value / 2.0
-        self.p_pixel_tolerance = self.get_parameter('alignment_pixel_tolerance').value
-        self.p_align_ang_gain = self.get_parameter('alignment_angular_gain').value
-        self.p_align_lin_vel = self.get_parameter('alignment_linear_velocity').value
-        self.p_search_rot_vel = self.get_parameter('alignment_search_rotation_speed').value
+        self.p_align_dist = float(self.get_parameter('alignment_dist_laser').value)
+        self.p_image_center = float(self.get_parameter('alignment_image_width').value) / 2.0
+        self.p_pixel_tolerance = float(self.get_parameter('alignment_pixel_tolerance').value)
+        self.p_align_ang_gain = float(self.get_parameter('alignment_angular_gain').value)
+        self.p_align_lin_vel = float(self.get_parameter('alignment_linear_velocity').value)
+        self.p_search_rot_vel = float(self.get_parameter('alignment_search_rotation_speed').value)
         
         self.get_logger().info("Parâmetros carregados com sucesso.")
+
+    def publish_diagnostics(self):
+        """Publica informações de diagnóstico do sistema."""
+        msg = DiagnosticArray()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        
+        # Status do nó
+        status = DiagnosticStatus()
+        status.name = f"{self.get_name()}:Status"
+        status.level = DiagnosticStatus.OK
+        status.message = f"Estado atual: {self.state.name}"
+        status.values.append(KeyValue(key="current_state", value=self.state.name))
+        
+        # Uso de CPU
+        cpu_status = DiagnosticStatus()
+        cpu_status.name = f"{self.get_name()}:CPU"
+        try:
+            cpu_usage = psutil.Process(os.getpid()).cpu_percent()
+            cpu_status.values.append(KeyValue(key="cpu_usage", value=f"{cpu_usage:.1f}%"))
+            
+            if cpu_usage > 80:
+                cpu_status.level = DiagnosticStatus.WARN
+                cpu_status.message = "Alto uso de CPU"
+            else:
+                cpu_status.level = DiagnosticStatus.OK
+                cpu_status.message = "Uso normal"
+        except Exception as e:
+            cpu_status.level = DiagnosticStatus.ERROR
+            cpu_status.message = f"Erro ao ler CPU: {str(e)}"
+        
+        msg.status.append(status)
+        msg.status.append(cpu_status)
+        self.diagnostic_pub.publish(msg)
 
     # --- Funções de Callback (recebem dados dos sensores) ---
 
@@ -191,6 +247,7 @@ class StateMachineNode(Node):
         goal_msg.pose.position = goal_point
         goal_msg.pose.orientation.w = 1.0 # Orientação neutra
         self.goal_pub.publish(goal_msg)
+        self.current_goal = goal_point
         self.get_logger().info(f"🎯 Novo alvo publicado para o planejador: ({goal_point.x:.2f}, {goal_point.y:.2f})")
         self.goal_published = True
 
@@ -214,16 +271,27 @@ class StateMachineNode(Node):
         if self.state != new_state:
             self.get_logger().info(f"==> MUDANÇA DE ESTADO: {self.state.name} -> {new_state.name}")
             self.state = new_state
+            self.state_start_time = self.get_clock().now()
+            
             # Reseta variáveis de controle de estado/sequência
             self.goal_published = False
             self.sequence_start_time = None
             self.sequence_step = 0
+            self.prev_error = 0.0
+            self.integral = 0.0
 
     def execute_state_machine(self):
         """Função principal executada pelo timer, contendo a lógica de cada estado."""
         if self.robot_pose is None or self.robot_yaw is None:
             self.get_logger().warn('Aguardando odometria para iniciar a lógica...', throttle_duration_sec=5)
             return
+        
+        # Verificação de tempo limite para estados críticos
+        if self.state in [State.FOLLOWING_PATH, State.ALIGNING_FOR_CAPTURE]:
+            elapsed_time = (self.get_clock().now() - self.state_start_time).nanoseconds / 1e9
+            if elapsed_time > 30.0:  # 30 segundos de timeout
+                self.get_logger().error(f"Timeout no estado {self.state.name}! Ativando modo de recuperação.")
+                self.change_state(State.RECOVERY)
         
         # --- ESTADO 1: NAVEGANDO PARA A BANDEIRA ---
         if self.state == State.NAVIGATING_TO_FLAG:
@@ -240,17 +308,26 @@ class StateMachineNode(Node):
 
         # --- ESTADO 2: SEGUINDO O CAMINHO (PURE PURSUIT) ---
         elif self.state == State.FOLLOWING_PATH:
+            # Verificação de obstáculos próximos
             if self.laser_ranges:
                 # Ângulo de 60° à frente (considerando 360 leituras)
-                front_cone = self.laser_ranges[:30] + self.laser_ranges[-30:]
-                min_distance = min(front_cone)
+                num_ranges = len(self.laser_ranges)
+                front_angle = int(num_ranges * 60 / 360 / 2)
+                front_cone = self.laser_ranges[:front_angle] + self.laser_ranges[-front_angle:]
                 
-                if min_distance < 0.5:  # 50cm de limite de segurança
-                    self.move_robot(0.0, 0.0)
-                    self.get_logger().warn("Obstáculo detectado! Replanejando...")
-                    self.publish_goal(self.current_goal)
-                    self.change_state(State.WAITING_FOR_PATH)
-                    return
+                # Filtra leituras infinitas
+                valid_ranges = [r for r in front_cone if not math.isinf(r)]
+                if valid_ranges:
+                    min_distance = min(valid_ranges)
+                    
+                    if min_distance < 0.5:  # 50cm de limite de segurança
+                        self.move_robot(0.0, 0.0)
+                        self.get_logger().warn(f"Obstáculo detectado a {min_distance:.2f}m! Replanejando...")
+                        if self.current_goal:
+                            self.publish_goal(self.current_goal)
+                            self.change_state(State.WAITING_FOR_PATH)
+                        return
+            
             if self.current_path is None:
                 self.move_robot(0.0, 0.0)
                 return
@@ -275,9 +352,10 @@ class StateMachineNode(Node):
                     self.change_state(State.ALIGNING_FOR_CAPTURE)
                 return
 
-            # Lógica do Pure Pursuit
+            # Lógica do Pure Pursuit com busca binária
             target_point = self._find_target_point()
-            if target_point is None: target_point = final_goal_pos # Se não encontrar, mira no final
+            if target_point is None: 
+                target_point = final_goal_pos # Se não encontrar, mira no final
 
             angle_to_target = math.atan2(target_point.y - robot_pos.y, target_point.x - robot_pos.x)
             angle_error = self._normalize_angle(angle_to_target - self.robot_yaw)
@@ -287,33 +365,37 @@ class StateMachineNode(Node):
 
         # --- ESTADO 3: ALINHAMENTO FINO PARA CAPTURA ---
         elif self.state == State.ALIGNING_FOR_CAPTURE:
-            if self.laser_ranges is None: return
+            if self.laser_ranges is None: 
+                return
 
-            # 1. Aproximação com o laser
-            if self.laser_ranges[0] < self.p_align_dist:
+            # 1. Verificação de distância com laser
+            if min(self.laser_ranges[0:10]) < self.p_align_dist:
                 self.move_robot(0.0, 0.0)
                 self.change_state(State.CAPTURING_FLAG)
                 return
 
-            # 2. Centralização com a câmera
+            # 2. Centralização com a câmera usando controle PID
             if self.flag_pixel_pos is not None:
                 error = self.flag_pixel_pos - self.p_image_center
                 
-                # Controle PID
+                # Controle PID para alinhamento angular
                 P = error * 0.01
-                self.integral += error * 0.005
-                D = (error - self.prev_error) * 0.002
+                self.integral += error * 0.001
+                D = (error - self.prev_error) * 0.005
                 self.prev_error = error
                 
                 angular_vel = P + self.integral + D
-                self.move_robot(self.p_align_lin_vel, angular_vel)
-
-            error = self.flag_pixel_pos - self.p_image_center
-            if abs(error) > self.p_pixel_tolerance: # Se está desalinhado, corrige a rotação
-                angular_vel = self.p_align_ang_gain * error
-                self.move_robot(0.0, angular_vel)
-            else: # Se está alinhado, avança devagar
-                self.move_robot(self.p_align_lin_vel, 0.0)
+                
+                # Se o erro for pequeno, avance
+                if abs(error) < self.p_pixel_tolerance:
+                    linear_vel = self.p_align_lin_vel
+                else:
+                    linear_vel = 0.0
+                    
+                self.move_robot(linear_vel, angular_vel)
+            else:
+                # Se não detectou a bandeira, gira para procurar
+                self.move_robot(0.0, self.p_search_rot_vel)
 
         # --- ESTADO 4: CAPTURANDO A BANDEIRA (SEQUÊNCIA TEMPORIZADA) ---
         elif self.state == State.CAPTURING_FLAG:
@@ -344,11 +426,37 @@ class StateMachineNode(Node):
             self.get_logger().info("### MISSÃO CONCLUÍDA ###", once=True)
             self.move_robot(0.0, 0.0)
             
+        # --- ESTADO DE RECUPERAÇÃO ---
+        elif self.state == State.RECOVERY:
+            if self.sequence_step == 0:
+                self.get_logger().warn("Modo de recuperação: recuando...")
+                self.move_robot(-0.2, 0.0)
+                self.recovery_start_time = self.get_clock().now()
+                self.sequence_step = 1
+                
+            elif self.sequence_step == 1:
+                elapsed = (self.get_clock().now() - self.recovery_start_time).nanoseconds / 1e9
+                if elapsed > 2.0:  # Recua por 2 segundos
+                    self.get_logger().warn("Modo de recuperação: girando...")
+                    self.move_robot(0.0, 0.5)
+                    self.recovery_start_time = self.get_clock().now()
+                    self.sequence_step = 2
+                    
+            elif self.sequence_step == 2:
+                elapsed = (self.get_clock().now() - self.recovery_start_time).nanoseconds / 1e9
+                if elapsed > 3.0:  # Gira por 3 segundos
+                    self.get_logger().warn("Modo de recuperação: retomando missão...")
+                    if self.current_goal:
+                        self.publish_goal(self.current_goal)
+                        self.change_state(State.WAITING_FOR_PATH)
+                    else:
+                        self.change_state(State.NAVIGATING_TO_FLAG)
+            
     # --- Funções Auxiliares da Lógica ---
 
     def _find_target_point(self) -> Point | None:
         """Encontra o ponto alvo ideal usando busca binária."""
-        if not self.current_path.poses:
+        if self.current_path is None or not self.current_path.poses:
             return None
             
         robot_pos = (self.robot_pose.position.x, self.robot_pose.position.y)
@@ -387,7 +495,10 @@ class StateMachineNode(Node):
         if self.sequence_step < len(steps) and elapsed >= steps[self.sequence_step][0]:
             action_time, action_function = steps[self.sequence_step]
             self.get_logger().info(f"Executando passo {self.sequence_step} da sequência após {elapsed:.2f}s.")
-            action_function()
+            try:
+                action_function()
+            except Exception as e:
+                self.get_logger().error(f"Erro na sequência: {str(e)}")
             self.sequence_step += 1
 
     @staticmethod

@@ -10,12 +10,23 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Comm
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch.conditions import IfCondition
+import subprocess
+
+# Adicione esta função antes do generate_launch_description()
+def fix_permissions():
+    try:
+        subprocess.run(["sudo", "chmod", "a+rw", "/dev/dri/renderD128"], check=True)
+        subprocess.run(["sudo", "chmod", "a+rw", "/dev/dri/renderD129"], check=True)
+        print("✅ Permissões de renderização corrigidas")
+    except Exception as e:
+        print(f"⚠️ Erro ao corrigir permissões: {e}")
 
 def generate_launch_description():
     """
     Inicia o robô PRM na simulação. Esta versão combina a lógica funcional do arquivo
     original com a flexibilidade de argumentos de lançamento e código organizado.
     """
+    fix_permissions()
 
     # --- 1. ARGUMENTOS DE LANÇAMENTO ---
     declared_arguments = [

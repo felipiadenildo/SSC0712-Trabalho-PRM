@@ -196,6 +196,7 @@ class RoboMapperNode(Node):
         
         self.map_publisher.publish(msg)
         self.get_logger().info('Mapa atualizado e publicado.', throttle_duration_sec=5)
+        msg.info.map_load_time = msg.header.stamp
 
 def main(args=None):
     """Função principal que inicializa e executa o nó."""
