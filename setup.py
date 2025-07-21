@@ -46,7 +46,7 @@ if os.path.isdir('world'):
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.0.1', # Incrementado para refletir as novas adições
     packages=find_packages(exclude=['test']),
     data_files=data_files,
     install_requires=['setuptools'],
@@ -58,15 +58,18 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            # --- Nós Utilitários e de Teste (Mantidos) ---
             'tartaruga = prm.controle_tartaruga:main',
             'ground_truth_odometry = prm.ground_truth_odometry:main',
-            # 'controle_robo = prm.controle_robo:main',
             'robo_mapper = prm.robo_mapper:main',
-            # novos:
+            'test_gripper = prm.test_gripper:main',
+
+            # --- Nós Principais do Robô (Atualizados) ---
+            # Formato: 'nome_executavel = pacote_python.nome_arquivo:main'
             'state_machine_node = prm.path_finding.state_machine_node:main', 
             'path_planner_node = prm.path_finding.path_planner_node:main',
-            'test_gripper = prm.test_gripper:main',
             'vision_node = prm.vision_node:main'
         ],
     },
 )
+            

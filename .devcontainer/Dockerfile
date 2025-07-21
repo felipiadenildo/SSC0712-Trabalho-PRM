@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
     python3-colcon-common-extensions \
     python3-rosdep \
     build-essential \
+    # opencv-python \
+    # opencv-contrib-python\
     # Editores e utilitários de conveniência
     vim \
     terminator \
@@ -30,6 +32,7 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-dri \
     # Pontes de comunicação entre ROS 2 e Gazebo (Ignition)
     ros-${ROS_DISTRO}-ros-gz-bridge \
+    ros-${ROS_DISTRO}-cv-bridge \
     ros-${ROS_DISTRO}-ros-gz-sim \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
     # Ferramenta para processar arquivos de descrição de robô .xacro
@@ -92,7 +95,7 @@ RUN echo "" >> ~/.bashrc && \
     # ✅ EDIÇÃO: Alias 'build' melhorado para garantir que a compilação ocorra no diretório correto.
     echo "alias build='cd /home/ros/ros2_ws && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo'" >> ~/.bashrc && \
     # Alias para o seu script de controle.
-    echo "alias runapp='run-app.sh'" >> ~/.bashrc && \
+    echo "alias runapp='/home/ros/ros2_ws/src/prm/.devcontainer/run-app.sh'" >> ~/.bashrc && \
     # Alias para carregar o ambiente do workspace manualmente, se necessário.
     echo "alias s_ws='source /home/ros/ros2_ws/install/setup.bash'" >> ~/.bashrc
 

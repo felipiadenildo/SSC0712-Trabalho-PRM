@@ -425,7 +425,36 @@
     <child link="camera_frame"/>
   </joint>
 
+  <gazebo reference="laser_link">
+  <sensor type="ray" name="laser_sensor">
+    <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <namespace>/</namespace>
+        <topic>scan</topic> </ros>
+    </plugin>
+  </sensor>
+</gazebo>
+
   <gazebo reference="camera_link">
+
+    <gazebo reference="camera_link">
+  <sensor type="camera" name="camera_sensor">
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <ros>
+        <namespace>/</namespace>
+        <camera_name>camera</camera_name> <image_topic>image_raw</image_topic> </ros>
+    </plugin>
+  </sensor>
+</gazebo>
+
+<gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <command_topic>cmd_vel</command_topic> <odometry_topic>odom</odometry_topic>   </plugin>
+</gazebo>
+    
+<plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+  <parameters>$(find prm)/config/prm_controllers.yaml</parameters>
+</plugin>
 
     <!-- Insere uma camera comum RGB -->
     <!-- <sensor name="robot_cam" type="camera">

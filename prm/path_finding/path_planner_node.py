@@ -1,144 +1,142 @@
-# prm/path_finding/path_planner_node.py
-
 import rclpy
-
 from rclpy.node import Node
 import numpy as np
-from geometry_msgs.msg import PoseStamped, Point
-from .path_planner_util import find_path, convert_occupancy_grid_to_map
+
 from nav_msgs.msg import Odometry, Path, OccupancyGrid
+from geometry_msgs.msg import Point, PoseStamped
+from rclpy.qos import QoSProfile, DurabilityPolicy, HistoryPolicy
+from .a_star import AStar
 
 class PathPlannerNode(Node):
+    """
+    Nó responsável por receber um alvo, planear um caminho usando o A*
+    e publicar a rota.
+    """
     def __init__(self):
         super().__init__('path_planner_node')
-        
-        # --- Parâmetros ---
-        # Raio de segurança ao redor do robô (em células do mapa)
-        self.declare_parameter('safety_radius', 5) 
 
-        # --- Variáveis ---
-        self.current_map = None
-        self.map_resolution = 0.0
-        self.map_origin = None
-        self.robot_pose = None  # Posição do robô, se necessário
-        
-        # --- Subscribers ---
-        # Assina o tópico do mapa para ter sempre a visão mais recente do mundo
-        self.map_subscriber = self.create_subscription(
-            OccupancyGrid,
-            '/map',  # Tópico padrão de mapa do SLAM
-            self.map_callback,
-            rclpy.qos.QoSProfile(depth=1, reliability=rclpy.qos.QoSReliabilityPolicy.RELIABLE, durability=rclpy.qos.QoSDurabilityPolicy.TRANSIENT_LOCAL)
-        )
-        
-        # Assina um tópico para receber o "alvo" (PoseStamped)
-        self.goal_subscriber = self.create_subscription(
-            PoseStamped,
-            '/robot/goal_pose', # Tópico customizado para receber alvos
-            self.goal_callback,
-            10
-        )
-        
-        # Assina o tópico de odometria para obter a posição do robô
-        self.odom_subscriber = self.create_subscription(
-            Odometry,
-            '/odom_gt',  # Usamos a odometria para saber a posição atual
-            self.odom_callback,
-            10)
-        
-        # --- Publishers ---
-        # Publica o caminho encontrado como uma mensagem nav_msgs/Path
+        # --- Publisher ---
         self.path_publisher = self.create_publisher(Path, '/robot/path', 10)
+
+        # --- Subscribers ---
+        self.create_subscription(OccupancyGrid, '/map', self.map_callback, 10)
+        # self.create_subscription(PoseStamped, '/robot/goal_pose', self.goal_callback, 10)
+        self.create_subscription(Odometry, '/odom_gt', self.odom_callback, 10)
+
+        # --- Variáveis de Instância ---
+        self.robot_pose = None
+        self.map_data = None
+        self.map_resolution = None
+        self.map_origin = None
+        self.map_width = None
+        self.map_height = None
+        self.a_star = None
+
+        self.get_logger().info("Path Planner Node foi iniciado e está aguardando o mapa.")
         
-        self.get_logger().info('Nó Path Planner iniciado. Aguardando mapa e alvo...')
+        # --- PERFIL DE QUALIDADE DE SERVIÇO PARA O ALVO ---
+        qos_profile_goal = QoSProfile(
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+        
+        self.create_subscription(PoseStamped, '/robot/goal_pose', self.goal_callback, qos_profile_goal)
 
     def map_callback(self, msg: OccupancyGrid):
-        """ Callback para armazenar o mapa mais recente. """
+        """Callback que processa e armazena o mapa de ocupação."""
         self.get_logger().info('Mapa recebido!')
-        self.current_map = convert_occupancy_grid_to_map(msg)
         self.map_resolution = msg.info.resolution
         self.map_origin = msg.info.origin
-        self.get_logger().info(f"Dimensões do mapa: {self.current_map.shape}, Resolução: {self.map_resolution:.3f} m/pixel")
+        self.map_width = msg.info.width
+        self.map_height = msg.info.height
+        self.map_data = np.array(msg.data).reshape((self.map_height, self.map_width))
+        
+        # Inicializa a classe A* com o mapa pronto
+        self.a_star = AStar(self.map_data)
+        self.get_logger().info(f"Mapa processado. Dimensões: {self.map_data.shape}. A* inicializado.")
 
     def odom_callback(self, msg: Odometry):
         """Callback para armazenar a pose mais recente do robô."""
         self.robot_pose = msg.pose.pose
     
-    def world_to_map_coords(self, world_point: Point):
-        """ Converte coordenadas do mundo (em metros) para coordenadas do mapa (em pixels). """
-        if self.map_origin is None or self.map_resolution == 0:
+    # --- FUNÇÕES DE CONVERSÃO DE COORDENADAS (CORRIGIDAS) ---
+
+    def world_to_grid(self, world_x, world_y):
+        """Converte coordenadas do mundo (metros) para coordenadas da grelha (píxeis)."""
+        if self.map_origin is None or self.map_resolution is None:
+            self.get_logger().error("Tentativa de conversão de coordenadas sem mapa ou resolução.")
             return None
         
-        map_x = int((world_point.x - self.map_origin.position.x) / self.map_resolution)
-        map_y = int((world_point.y - self.map_origin.position.y) / self.map_resolution)
+        # Fórmula correta para a conversão
+        grid_x = int((world_x - self.map_origin.position.x) / self.map_resolution)
+        grid_y = int((world_y - self.map_origin.position.y) / self.map_resolution)
         
-        # A conversão de y precisa ser invertida devido à origem do mapa numpy
-        map_y = self.current_map.shape[0] - 1 - map_y
-        
-        return (map_y, map_x) # Retorna (linha, coluna)
+        return (grid_x, grid_y)
 
-    def map_to_world_coords(self, map_point):
-        """ Converte coordenadas do mapa (pixels) de volta para coordenadas do mundo (metros). """
-        map_y, map_x = map_point
+    def grid_to_world(self, grid_x, grid_y):
+        """Converte coordenadas da grelha (píxeis) de volta para coordenadas do mundo (metros)."""
+        world_x = (grid_x * self.map_resolution) + self.map_origin.position.x
+        world_y = (grid_y * self.map_resolution) + self.map_origin.position.y
         
-        # Inverte a conversão de y
-        inverted_y = self.current_map.shape[0] - 1 - map_y
-
-        world_x = (map_x * self.map_resolution) + self.map_origin.position.x
-        world_y = (inverted_y * self.map_resolution) + self.map_origin.position.y
+        return (world_x, world_y)
         
-        return Point(x=world_x, y=world_y, z=0.0)
+    def is_valid(self, grid_point):
+        """Verifica se um ponto na grelha é válido (dentro dos limites e não é um obstáculo)."""
+        if grid_point is None: return False
+        grid_x, grid_y = grid_point
+        
+        if not (0 <= grid_x < self.map_width and 0 <= grid_y < self.map_height):
+            self.get_logger().warn(f"Coordenada ({grid_x}, {grid_y}) está fora dos limites do mapa (0-{self.map_width-1}, 0-{self.map_height-1}).")
+            return False
+        
+        # O valor 100 significa obstáculo definitivo.
+        if self.map_data[grid_y, grid_x] > 50:
+            self.get_logger().warn(f"Coordenada ({grid_x}, {grid_y}) está sobre um obstáculo.")
+            return False
+            
+        return True
 
     def goal_callback(self, msg: PoseStamped):
-        """ Callback disparado quando um novo alvo é recebido. """
-        if self.current_map is None:
-            self.get_logger().warn('Alvo recebido, mas o mapa ainda não está disponível.')
+        """Callback que planeia um caminho da posição atual do robô até o alvo."""
+        if self.a_star is None or self.robot_pose is None:
+            self.get_logger().warn('Alvo recebido, mas o mapa ou a odometria ainda não estão prontos.')
             return
 
-        # Pega a posição do robô (ponto de partida) - por enquanto, vamos fixar um valor
-        # No futuro, isso virá da odometria
-        # NOTA: O ideal é receber o ponto de partida junto com o alvo.
-        start_world = self.robot_pose.position # Posição atual do robô
+        self.get_logger().info("Novo alvo recebido! Iniciando planejamento.")
+        
+        start_world = self.robot_pose.position
         goal_world = msg.pose.position
 
-        start_map = self.world_to_map_coords(start_world)
-        goal_map = self.world_to_map_coords(goal_world)
+        start_grid = self.world_to_grid(start_world.x, start_world.y)
+        goal_grid = self.world_to_grid(goal_world.x, goal_world.y)
+        
+        self.get_logger().info(f"Planejando de {start_grid} para {goal_grid}")
 
-        self.get_logger().info(f'Novo alvo recebido. Início (mapa): {start_map}, Fim (mapa): {goal_map}')
-
-        if start_map is None or goal_map is None:
-            self.get_logger().error('Não foi possível converter as coordenadas do alvo para o mapa.')
-            return
-            
-        safety_radius = self.get_parameter('safety_radius').get_parameter_value().integer_value
-
-        # Chama a função de busca de caminho
-        path_map_coords = find_path(
-            self.current_map,
-            start=start_map,
-            goal=goal_map,
-            sz=safety_radius
-        )
-
-        if not path_map_coords:
-            self.get_logger().warn('Nenhum caminho encontrado para o alvo.')
+        if not self.is_valid(start_grid) or not self.is_valid(goal_grid):
+            self.get_logger().error(f"Posição inicial ({start_grid}) ou final ({goal_grid}) é inválida. Abortando planeamento.")
             return
 
-        self.get_logger().info(f'Caminho encontrado com {len(path_map_coords)} pontos.')
-        
-        # Converte o caminho (em pixels) de volta para o mundo (em metros) e publica
-        path_msg = Path()
-        path_msg.header.stamp = self.get_clock().now().to_msg()
-        path_msg.header.frame_id = 'map' # O caminho é definido no frame do mapa
+        path_grid = self.a_star.find_path(start_grid, goal_grid)
 
-        for map_point in path_map_coords:
-            pose = PoseStamped()
-            pose.header = path_msg.header
-            pose.pose.position = self.map_to_world_coords(map_point)
-            path_msg.poses.append(pose)
-        
-        self.path_publisher.publish(path_msg)
-        self.get_logger().info('Caminho publicado no tópico /robot/path.')
+        if path_grid:
+            self.get_logger().info(f"Caminho encontrado com {len(path_grid)} pontos.")
+            path_msg = Path()
+            path_msg.header.stamp = self.get_clock().now().to_msg()
+            path_msg.header.frame_id = 'map'
+
+            for point_grid in path_grid:
+                world_coords = self.grid_to_world(point_grid[0], point_grid[1])
+                pose = PoseStamped()
+                pose.header = path_msg.header
+                pose.pose.position.x = world_coords[0]
+                pose.pose.position.y = world_coords[1]
+                path_msg.poses.append(pose)
+                
+            self.path_publisher.publish(path_msg)
+            self.get_logger().info("Caminho publicado com sucesso!")
+        else:
+            self.get_logger().warn("Não foi possível encontrar um caminho para o alvo.")
 
 def main(args=None):
     rclpy.init(args=args)
@@ -149,3 +147,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+

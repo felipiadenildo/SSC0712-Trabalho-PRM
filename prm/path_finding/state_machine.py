@@ -1,12 +1,17 @@
-# prm/path_finding/state_machine.py
-from enum import Enum
+from enum import Enum, auto
 
 class State(Enum):
-    SEARCHING_FLAG = 1      # Procurando a bandeira (girando)
-    MOVING_TO_FLAG = 2      # Estado transitório que requisita o caminho para a bandeira
-    RETURNING_TO_BASE = 3   # Estado transitório que requisita o caminho para a base
-    FOLLOWING_PATH = 4      # Seguindo a lista de waypoints recebida do planejador
-    ALIGNING_FOR_CAPTURE = 5 # Alinhamento final para a captura
-    CAPTURING_FLAG = 6      # Acionamento da garra para capturar
-    DEPOSITING_FLAG = 7     # Acionamento da garra para soltar a bandeira
-    DONE = 8                # Missão concluída
+    """
+    Enumeração de todos os estados possíveis para a máquina de estados do robô.
+    """
+    # --- ESTADOS ATUALIZADOS ---
+    NAVIGATING_TO_FLAG = auto() # NOVO ESTADO: Navega para a posição conhecida da bandeira.
+    SEARCHING_FLAG = auto()     # Gira no local para encontrar a bandeira visualmente (usado para alinhamento fino).
+    FOLLOWING_PATH = auto()     # Segue um caminho gerado pelo A*.
+    ALIGNING_FOR_CAPTURE = auto() # Aproximação final da bandeira usando a visão.
+    CAPTURING_FLAG = auto()     # Executa a sequência de captura com a garra.
+    RETURNING_TO_BASE = auto()  # Define o alvo de retorno para a base.
+    DEPOSITING_FLAG = auto()    # Executa a sequência de depósito com a garra.
+    DONE = auto()               # Missão concluída, o robô para.
+    
+    # O estado MOVING_TO_FLAG foi removido por ser redundante com NAVIGATING_TO_FLAG.

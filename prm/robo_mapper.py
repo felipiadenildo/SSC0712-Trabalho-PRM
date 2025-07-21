@@ -1,146 +1,115 @@
-#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-
-from sensor_msgs.msg import LaserScan, Imu, Image
-from nav_msgs.msg import Odometry, OccupancyGrid
-from geometry_msgs.msg import Twist, Pose
-
-from std_msgs.msg import Header
-
-from scipy.spatial.transform import Rotation as R
-
-from cv_bridge import CvBridge
-import cv2
+from rclpy.qos import QoSProfile, DurabilityPolicy, HistoryPolicy
 import numpy as np
+import math
 
-# Necessario para publicar o frame map:
-from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
-from geometry_msgs.msg import TransformStamped
+from nav_msgs.msg import Odometry, OccupancyGrid
+from sensor_msgs.msg import LaserScan
 
-
-class RoboMapper(Node):
-
+class RoboMapperNode(Node):
+    """
+    Nó responsável por criar um mapa de ocupação 2D a partir dos dados
+    do Lidar e da odometria do robô.
+    """
     def __init__(self):
         super().__init__('robo_mapper')
 
-        # Subscribers
+        # --- Qualidade de Serviço (QoS) para o Mapa ---
+        # Isto é MUITO IMPORTANTE. O mapa é um tópico de dados estáticos.
+        # A durabilidade "TRANSIENT_LOCAL" garante que qualquer nó que se subscreva
+        # ao tópico /map receberá a última mensagem publicada, mesmo que o nó
+        # se tenha subscrito depois da publicação.
+        qos_profile = QoSProfile(
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+
+        # --- Publisher ---
+        self.map_publisher = self.create_publisher(OccupancyGrid, '/map', qos_profile)
+
+        # --- Subscribers ---
+        self.create_subscription(Odometry, '/odom_gt', self.odom_callback, 10)
         self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
-        self.create_subscription(Pose, '/model/prm_robot/pose', self.odom_callback, 10)
-        self.create_subscription(Image, '/robot_cam/colored_map', self.camera_callback, 10)
 
-        # Utilizado para converter imagens ROS -> OpenCV
-        self.bridge = CvBridge()
+        # --- Configurações do Mapa ---
+        self.map_resolution = 0.05  # 5 cm por célula
+        self.map_width = 200        # Largura em células (200 * 0.05 = 10 metros)
+        self.map_height = 200       # Altura em células (200 * 0.05 = 10 metros)
+        
+        # Inicializa a grelha do mapa.
+        # -1: Desconhecido, 0: Livre, 100: Ocupado
+        self.map_data = np.full((self.map_height, self.map_width), -1, dtype=np.int8)
 
-        # Timer para enviar comandos continuamente
-        self.timer = self.create_timer(0.5, self.atualiza_mapa)
+        # Posição da origem do mapa no mundo
+        self.map_origin_x = -self.map_width / 2.0 * self.map_resolution
+        self.map_origin_y = -self.map_height / 2.0 * self.map_resolution
+        
+        # Variáveis para a posição do robô
+        self.robot_x = 0.0
+        self.robot_y = 0.0
+        self.robot_theta = 0.0
 
-        # Estado atual do robo:
-        self.x = 0
-        self.y = 0
-        self.heading = 0
+        # Timer para publicar o mapa periodicamente
+        self.timer = self.create_timer(2.0, self.publish_map) # Publica o mapa a cada 2 segundos
 
-        # Atributos de configuração do mapa
-        # Parâmetros do mapa
-        self.grid_size = 50  # 50x50 células
-        self.resolution = 0.25  # 25 cm por célula
+        self.get_logger().info('Robo Mapper iniciado. Construindo o mapa...')
 
-        # Matriz do mapa (-1 = desconhecido)
-        self.grid_map = -np.ones((self.grid_size, self.grid_size), dtype=np.int8)
-
-        # Publisher do mapa
-        self.map_pub = self.create_publisher(OccupancyGrid, '/grid_map', 10)
-
-        # Publicando o frame map para vizualização no RVis
-        # Utilizar o comando: ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 map odom
-        # ou o código abaixo:
-        self.tf_static_broadcaster = StaticTransformBroadcaster(self)
-
-        static_tf = TransformStamped()
-        static_tf.header.stamp = self.get_clock().now().to_msg()
-        static_tf.header.frame_id = "map"
-        static_tf.child_frame_id = "odom_gt"
-        static_tf.transform.translation.x = 0.0
-        static_tf.transform.translation.y = 0.0
-        static_tf.transform.translation.z = 0.0
-        static_tf.transform.rotation.w = 1.0  # identidade (Quaternions!!)
-        self.tf_static_broadcaster.sendTransform(static_tf)
-
+    def odom_callback(self, msg: Odometry):
+        """Atualiza a posição e orientação do robô."""
+        self.robot_x = msg.pose.pose.position.x
+        self.robot_y = msg.pose.pose.position.y
+        q = msg.pose.pose.orientation
+        # Converte o quaternion para um ângulo de Euler (yaw)
+        self.robot_theta = math.atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z))
 
     def scan_callback(self, msg: LaserScan):
-        pass
+        """Processa os dados do Lidar para atualizar o mapa."""
+        angle = msg.angle_min
+        for r in msg.ranges:
+            # Ignora leituras inválidas (infinitas ou muito curtas)
+            if r > msg.range_min and r < msg.range_max:
+                # Calcula a posição (x, y) do ponto detetado pelo Lidar no referencial do mundo
+                world_x = self.robot_x + r * math.cos(self.robot_theta + angle)
+                world_y = self.robot_y + r * math.sin(self.robot_theta + angle)
+                
+                # Converte as coordenadas do mundo para as coordenadas da grelha do mapa
+                grid_x = int((world_x - self.map_origin_x) / self.map_resolution)
+                grid_y = int((world_y - self.map_origin_y) / self.map_resolution)
 
-    def odom_callback(self, msg: Pose):
-        # Extrair posição
-        self.x = msg.position.x
-        self.y = msg.position.y
+                # Marca a célula como ocupada (100) se estiver dentro dos limites do mapa
+                if 0 <= grid_x < self.map_width and 0 <= grid_y < self.map_height:
+                    self.map_data[grid_y, grid_x] = 100
+            
+            angle += msg.angle_increment
 
-        # Extrair orientação (quaternion)
-        orientation_q = msg.orientation
-        quat = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+    def publish_map(self):
+        """Cria e publica a mensagem OccupancyGrid."""
+        msg = OccupancyGrid()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'map'
 
-        # Converter de quaternion para Euler (roll, pitch, yaw)
-        r = R.from_quat(quat)
-        euler = r.as_euler('xyz', degrees=False)
-
-        # Armazenar heading (Z - yaw)
-        self.heading = euler[2]
-
-
-    def camera_callback(self, msg: Image):
-        # Converte mensagem ROS para imagem OpenCV (BGR)
-        # frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        pass
-
-    def world_to_grid(self, x, y):
-        origin_offset = self.grid_size * self.resolution / 2
-        gx = int((x + origin_offset) / self.resolution)
-        gy = int((y + origin_offset) / self.resolution)
-        return gx, gy
-
-    def atualiza_mapa(self):
-        # Marcar a posição atual do robô no mapa
-        gx, gy = self.world_to_grid(self.x, self.y)
-        if 0 <= gx < self.grid_size and 0 <= gy < self.grid_size:
-            self.grid_map[gy, gx] = 100  # 100 = célula ocupada (por exemplo, robô)
-
-        # Publicar o mapa
-        self.publish_occupancy_grid()
-
-        # Imprimir estado (Opcional)
-        #print(f"Posição atual do robô: x = {self.x:.2f}, y = {self.y:.2f}, heading = {self.heading:.2f} rad")
-
-    def publish_occupancy_grid(self):
-        grid_msg = OccupancyGrid()
-        grid_msg.header.stamp = self.get_clock().now().to_msg()
-        grid_msg.header.frame_id = "map"
-
-        # Metadados do mapa
-        grid_msg.info.resolution = self.resolution
-        grid_msg.info.width = self.grid_size
-        grid_msg.info.height = self.grid_size
-
-        # Origem do mapa (canto inferior esquerdo do grid no mundo)
-        origin = Pose()
-        origin.position.x = - (self.grid_size * self.resolution) / 2
-        origin.position.y = - (self.grid_size * self.resolution) / 2
-        origin.position.z = 0.0
-        origin.orientation.w = 1.0
-        grid_msg.info.origin = origin
-
-        # Convertendo numpy array para lista 1D em row-major
-        grid_msg.data = self.grid_map.flatten().tolist()
-
-        # Publicar
-        self.map_pub.publish(grid_msg)
+        # Informações do mapa
+        msg.info.resolution = self.map_resolution
+        msg.info.width = self.map_width
+        msg.info.height = self.map_height
+        msg.info.origin.position.x = self.map_origin_x
+        msg.info.origin.position.y = self.map_origin_y
+        
+        # Converte a matriz 2D numpy para uma lista 1D, como o formato da mensagem exige
+        msg.data = self.map_data.flatten().tolist()
+        
+        self.map_publisher.publish(msg)
+        self.get_logger().info('Mapa atualizado e publicado.')
 
 def main(args=None):
     rclpy.init(args=args)
-    node = RoboMapper()
-    rclpy.spin(node)
-    node.destroy_node()
+    mapper_node = RoboMapperNode()
+    rclpy.spin(mapper_node)
+    mapper_node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
+
