@@ -1,35 +1,66 @@
 Panels:
   - Class: rviz_common/Displays
     Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options
+        - /Status
+
   - Class: rviz_common/Views
     Name: Views
+    Splitter Ratio: 0.5
+
 Visualization Manager:
-  Displays:
-    - Class: rviz_default_plugins/Grid
-      Name: Grid
-      Value: true
-    - Alpha: 0.8
-      Class: rviz_default_plugins/RobotModel
-      Description Topic:
-        Value: /robot_description
-      Name: RobotModel
-      Value: true
-    - Class: rviz_default_plugins/TF
-      Name: TF
-      Value: true
+  Name: root
+  Enabled: true
+
   Global Options:
-    Fixed Frame: base_link
+    Fixed Frame: map    # quadro de referência
+    Frame Rate: 30
+    Background Color: 48; 48; 48
+
+  Displays:
+    # Grade
+    - Name: Grid
+      Class: rviz_default_plugins/Grid
+      Enabled: true
+      Plane: XY
+      Cell Size: 1
+
+    # Mapa de ocupação
+    - Name: Map
+      Class: rviz_default_plugins/Map
+      Enabled: true
+      Topic: /map
+      Color Scheme: map
+      Alpha: 0.7
+
+    # Caminho planejado
+    - Name: Path
+      Class: rviz_default_plugins/Path
+      Enabled: true
+      Topic: /robot/path
+      Style: Lines
+      Color: 255; 0; 0
+
+    # Modelo do robô como retângulo 2D
+    - Name: RobotModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Robot Description: robot_description   # certifique-se de ter publicado o parâmetro /robot_description
+      Visual Enabled: false                 # desliga o visual 3D
+      Collision Enabled: true               # usa a collision para mostrar footprint
+      Alpha: 1.0
+
   Tools:
+    - Class: rviz_default_plugins/Interact
     - Class: rviz_default_plugins/MoveCamera
-  Value: true
+    - Class: rviz_default_plugins/Select
+
   Views:
     Current:
-      Class: rviz_default_plugins/Orbit
-      Distance: 1.7
-      Name: Current View
-      Pitch: 0.33
-      Value: Orbit (rviz)
-      Yaw: 5.5
-Window Geometry:
-  Height: 800
-  Width: 1200
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Top‑Down View
+      Target Frame: map
+      Scale: 10        # quanto de área aparece na tela (10 m × 10 m)
+    Saved: ~

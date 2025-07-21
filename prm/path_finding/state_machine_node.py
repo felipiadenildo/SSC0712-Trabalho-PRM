@@ -59,7 +59,7 @@ class StateMachineNode(Node):
 
         # Parâmetros do Controlador "Pure Pursuit" (Seguidor de Caminho)
         self.declare_parameter('look_ahead_dist', 0.4)
-        self.declare_parameter('path_linear_velocity', 0.15)
+        self.declare_parameter('path_linear_velocity', 0.9)
         self.declare_parameter('path_angular_gain', 0.8)
         self.declare_parameter('goal_tolerance', 0.25)
 

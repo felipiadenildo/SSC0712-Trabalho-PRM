@@ -54,6 +54,10 @@ def generate_launch_description():
         [FindPackageShare("prm"), "rviz", "rviz_config.rviz"]
     )
     
+    rviz_config_path2 = PathJoinSubstitution(
+        [FindPackageShare("prm"), "rviz", "urdf.rviz"]
+    )
+    
     # --- 3. DEFINIÇÃO DOS NÓS E PROCESSOS (BASEADO NO ORIGINAL) ---
 
     # Nó do publicador de estados do robô
@@ -131,8 +135,9 @@ def generate_launch_description():
     robo_mapper_node = Node(
         package="prm",
         executable="robo_mapper",
-        name="robo_mapper",
-        parameters=[{"use_sim_time": use_sim_time}],
+        name="mapper",
+        output='screen',
+        # parameters=[{"use_sim_time": use_sim_time}],
     )
     
     # Utilitário de redirecionamento de tópico (restaurado do original)
@@ -149,13 +154,24 @@ def generate_launch_description():
 
     # Visualização com RViz
     rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        arguments=["-d", rviz_config_path],
-        output="screen",
-        condition=IfCondition(LaunchConfiguration("launch_rviz")),
-    )
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            output='screen',
+            arguments=['-d', rviz_config_path],
+            # parameters=[{'use_sim_time': use_sim_time}]
+        )
+    
+    # Visualização com RViz
+    rviz_node_2 = Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            output='screen',
+            arguments=['-d', rviz_config_path2],
+            # parameters=[{'use_sim_time': use_sim_time}]
+        )
+    
     
     # --- 4. ORDEM DE EXECUÇÃO E EVENTOS ---
     return LaunchDescription(declared_arguments + [
@@ -167,6 +183,7 @@ def generate_launch_description():
         robo_mapper_node,
         relay_cmd_vel,
         rviz_node,
+        rviz_node_2,
         
         # Handlers que garantem a sequência correta de carregamento dos controladores
         RegisterEventHandler(
@@ -178,4 +195,6 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(target_action=start_diff_drive_controller, on_exit=[start_gripper_controller]),
         ),
+        
+        
     ])

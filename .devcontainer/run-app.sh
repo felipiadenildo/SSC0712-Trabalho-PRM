@@ -123,8 +123,8 @@ func_kill_all() {
 
     # 4. Finaliza os processos de controle (A CORREÇÃO PRINCIPAL ESTÁ AQUI)
     #    Esta linha busca pelo comando exato que vimos na sua imagem.
+    pkill -9 -f "ros2 launch *" && echo -e "${RED}--> Processos 'ros2 launch....${NC}" || true
     pkill -9 -f "ros2 control load_controller" && echo -e "${RED}--> Processos 'ros2 control' finalizados.${NC}" || true
-    pkill -9 -f "ros2 launch prm carrega_robo" && echo -e "${RED}--> Processos 'ros2 launch' finalizados.${NC}" || true
     #    Mantemos a busca por "spawner" para o caso de você alternar entre as versões do launch file.
     pkill -9 -f "spawner" && echo -e "${RED}--> Spawners de controladores finalizados.${NC}" || true
     

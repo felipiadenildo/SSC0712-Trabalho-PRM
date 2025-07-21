@@ -68,7 +68,8 @@ setup(
             # Formato: 'nome_executavel = pacote_python.nome_arquivo:main'
             'state_machine_node = prm.path_finding.state_machine_node:main', 
             'path_planner_node = prm.path_finding.path_planner_node:main',
-            'vision_node = prm.vision_node:main'
+            'vision_node = prm.vision_node:main',
+            
         ],
     },
 )
