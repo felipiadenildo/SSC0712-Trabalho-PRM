@@ -6,6 +6,7 @@ class State(Enum):
     """
     # --- ESTADOS ATUALIZADOS ---
     NAVIGATING_TO_FLAG = auto() # NOVO ESTADO: Navega para a posição conhecida da bandeira.
+    WAITING_FOR_PATH = auto()
     SEARCHING_FLAG = auto()     # Gira no local para encontrar a bandeira visualmente (usado para alinhamento fino).
     FOLLOWING_PATH = auto()     # Segue um caminho gerado pelo A*.
     ALIGNING_FOR_CAPTURE = auto() # Aproximação final da bandeira usando a visão.
@@ -14,4 +15,4 @@ class State(Enum):
     DEPOSITING_FLAG = auto()    # Executa a sequência de depósito com a garra.
     DONE = auto()               # Missão concluída, o robô para.
     
-    # O estado MOVING_TO_FLAG foi removido por ser redundante com NAVIGATING_TO_FLAG.
+

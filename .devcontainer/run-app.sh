@@ -36,7 +36,7 @@ func_build() {
 func_start_sim() {
     echo -e "${YELLOW}--- A iniciar a Etapa 1: Simulação (Gazebo) ---${NC}"
     echo -e "${BLUE}A executar limpeza prévia para garantir um ambiente limpo...${NC}"
-    func_kill_all_silent # Executa a limpeza sem pedir confirmação
+    func_kill_all # Executa a limpeza sem pedir confirmação
 
     echo -e "\n${GREEN}A iniciar o Gazebo em segundo plano...${NC}"
     ros2 launch prm inicia_simulacao.launch.py &
@@ -67,7 +67,7 @@ func_run_all() {
     
     # 1. Limpeza Prévia (Salvaguarda Essencial)
     echo -e "\n${BLUE}Passo 0: A garantir que todos os processos antigos estão encerrados...${NC}"
-    func_kill_all_silent
+    func_kill_all
     sleep 2 # Pequena pausa para garantir que os processos terminaram
 
     # 2. Compilar
@@ -97,37 +97,46 @@ func_run_all() {
 }
 
 # --- FUNÇÃO DE ENCERRAMENTO (MELHORADA) ---
-func_kill_all() {
-    read -p "$(echo -e ${RED}'Tem a certeza que quer encerrar TODOS os processos do ROS e Gazebo? (s/n) '${NC})" -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Ss]$ ]]
-    then
-        func_kill_all_silent
-    else
-        echo -e "${GREEN}Operação de encerramento cancelada.${NC}"
-    fi
-}
+# func_kill_all() {
+#     read -p "$(echo -e ${RED}'Tem a certeza que quer encerrar TODOS os processos do ROS e Gazebo? (s/n) '${NC})" -n 1 -r
+#     echo
+#     if [[ $REPLY =~ ^[Ss]$ ]]
+#     then
+#         func_kill_all_silent
+#     else
+#         echo -e "${GREEN}Operação de encerramento cancelada.${NC}"
+#     fi
+# }
 
-func_kill_all_silent() {
+func_kill_all() {
     echo -e "${RED}=== INICIANDO PROCEDIMENTO DE ENCERRAMENTO TOTAL ===${NC}"
     
-    # Usa 'pkill' com o sinal -9 (SIGKILL) para forçar o encerramento.
-    # A opção '-f' faz a busca na linha de comando inteira.
-    # O '|| true' no final evita que o script pare se um processo não for encontrado.
-    pkill -9 -f "ign gazebo" && echo -e "${RED}--> Processos 'ign gazebo' finalizados.${NC}" || true
-    pkill -9 -f "gz server" && echo -e "${RED}--> Processos 'gz server' finalizados.${NC}" || true
-    pkill -9 -f "gz client" && echo -e "${RED}--> Processos 'gz client' finalizados.${NC}" || true
+    # 1. Finaliza todos os processos do Gazebo
+    pkill -9 -f "ign gazebo" && echo -e "${RED}--> Processos do Gazebo finalizados.${NC}" || true
+    
+    # 2. Finaliza os nós padrão do ROS
     pkill -9 -f "rviz2" && echo -e "${RED}--> Processo 'rviz2' finalizado.${NC}" || true
-    pkill -9 -f "ros_gz_bridge" && echo -e "${RED}--> Processo 'ros_gz_bridge' finalizado.${NC}" || true
     pkill -9 -f "robot_state_publisher" && echo -e "${RED}--> Nó 'robot_state_publisher' finalizado.${NC}" || true
     
-    # Mata os nós específicos do seu projeto e daemons do ROS
-    pkill -9 -f "prm/vision_node" && echo -e "${RED}--> Nó 'vision_node' finalizado.${NC}" || true
-    pkill -9 -f "prm/robo_mapper" && echo -e "${RED}--> Nó 'robo_mapper' finalizado.${NC}" || true
-    pkill -9 -f "prm/path_planner_node" && echo -e "${RED}--> Nó 'path_planner_node' finalizado.${NC}" || true
-    pkill -9 -f "prm/state_machine_node" && echo -e "${RED}--> Nó 'state_machine_node' finalizado.${NC}" || true
-    pkill -9 -f "prm/ground_truth_odometry" && echo -e "${RED}--> Nó 'ground_truth_odometry' finalizado.${NC}" || true
-    pkill -9 -f "_ros2_daemon" && echo -e "${RED}--> Daemon do ROS 2 finalizado.${NC}" || true
+    # 3. Finaliza a ponte de comunicação
+    pkill -9 -f "parameter_bridge" && echo -e "${RED}--> Ponte 'ros_gz_bridge' finalizada.${NC}" || true
+
+    # 4. Finaliza os processos de controle (A CORREÇÃO PRINCIPAL ESTÁ AQUI)
+    #    Esta linha busca pelo comando exato que vimos na sua imagem.
+    pkill -9 -f "ros2 control load_controller" && echo -e "${RED}--> Processos 'ros2 control' finalizados.${NC}" || true
+    pkill -9 -f "ros2 launch prm carrega_robo" && echo -e "${RED}--> Processos 'ros2 launch' finalizados.${NC}" || true
+    #    Mantemos a busca por "spawner" para o caso de você alternar entre as versões do launch file.
+    pkill -9 -f "spawner" && echo -e "${RED}--> Spawners de controladores finalizados.${NC}" || true
+    
+    # 5. Mata os nós específicos do seu projeto
+    pkill -9 -f "vision_node" && echo -e "${RED}--> Nó 'vision_node' finalizado.${NC}" || true
+    pkill -9 -f "robo_mapper" && echo -e "${RED}--> Nó 'robo_mapper' finalizado.${NC}" || true
+    pkill -9 -f "path_planner_node" && echo -e "${RED}--> Nó 'path_planner_node' finalizado.${NC}" || true
+    pkill -9 -f "state_machine_node" && echo -e "${RED}--> Nó 'state_machine_node' finalizado.${NC}" || true
+    pkill -9 -f "ground_truth_odometry" && echo -e "${RED}--> Nó 'ground_truth_odometry' finalizado.${NC}" || true
+    
+    # 6. Força o encerramento do daemon do ROS 2
+    pkill -9 -f "ros2-daemon" && echo -e "${RED}--> Daemon do ROS 2 finalizado.${NC}" || true
 
     echo -e "\n${GREEN}=== PROCEDIMENTO DE ENCERRAMENTO CONCLUÍDO ===${NC}"
 }

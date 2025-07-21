@@ -1,249 +1,181 @@
-from launch import LaunchDescription
-from launch.substitutions import PathJoinSubstitution, Command
-from launch.actions import ExecuteProcess, RegisterEventHandler
-from launch.event_handlers import OnProcessExit
+# -*- coding: utf-8 -*-
 
-from launch_ros.substitutions import FindPackageShare
-from launch_ros.actions import Node
-
+# Nome do Arquivo: carrega_robo.launch.py
 
 import os
-
-# Comando para controlar o robô: ros2 run teleop_twist_keyboard teleop_twist_keyboard
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+from launch.conditions import IfCondition
 
 def generate_launch_description():
-    # ------------------------------------------------------
-    # Caminho para o arquivo Xacro do robô
-    # ------------------------------------------------------
-    # Constrói o caminho absoluto para o arquivo `robot.urdf.xacro`,
-    # localizado na pasta `description` do pacote `prm`.
-    urdf_path = PathJoinSubstitution([
-        FindPackageShare("prm"),         # Diretório do pacote `prm`
-        "description",                   # Subpasta onde está o modelo
-        "robot.urdf.xacro"               # Nome do arquivo Xacro
-    ])
+    """
+    Inicia o robô PRM na simulação. Esta versão combina a lógica funcional do arquivo
+    original com a flexibilidade de argumentos de lançamento e código organizado.
+    """
 
-    # ------------------------------------------------------
-    # Processamento do Xacro para gerar o URDF final
-    # ------------------------------------------------------
-    # Executa o comando `xacro <caminho>` em tempo de lançamento,
-    # resultando no conteúdo URDF expandido como uma string.
-    robot_urdf_final = Command(["xacro ", urdf_path])
+    # --- 1. ARGUMENTOS DE LANÇAMENTO ---
+    declared_arguments = [
+        DeclareLaunchArgument(
+            "use_sim_time",
+            default_value="true",
+            description="Usar o tempo da simulação (essencial para o Gazebo).",
+        ),
+        DeclareLaunchArgument(
+            "launch_rviz",
+            default_value="true",
+            description="Controla se o RViz2 deve ser iniciado.",
+        ),
+        DeclareLaunchArgument(
+            "spawn_x", default_value="-8.0", description="Posição inicial X do robô."
+        ),
+        DeclareLaunchArgument(
+            "spawn_y", default_value="-0.5", description="Posição inicial Y do robô."
+        ),
+    ]
 
-    # ------------------------------------------------------
-    # Nodo robot_state_publisher
-    # ------------------------------------------------------
-    # Publica as transformações dos links do robô com base no URDF.
-    # Requer o parâmetro 'robot_description' com o conteúdo do modelo.
-    diff_drive_params = PathJoinSubstitution([
-        FindPackageShare("prm"),
-        "config",
-        "controller_config.yaml"
-    ])
+    use_sim_time = LaunchConfiguration("use_sim_time")
+
+    # --- 2. CAMINHOS E CONFIGURAÇÕES ---
+    urdf_path = PathJoinSubstitution(
+        [FindPackageShare("prm"), "description", "robot.urdf.xacro"]
+    )
+    # Comando 'xacro' restaurado para a sintaxe original funcional (com espaço)
+    robot_urdf_content = Command(["xacro ", urdf_path])
     
+    controller_params_path = PathJoinSubstitution(
+        [FindPackageShare("prm"), "config", "controller_config.yaml"]
+    )
+    
+    rviz_config_path = PathJoinSubstitution(
+        [FindPackageShare("prm"), "rviz", "rviz_config.rviz"]
+    )
+    
+    # --- 3. DEFINIÇÃO DOS NÓS E PROCESSOS (BASEADO NO ORIGINAL) ---
+
+    # Nó do publicador de estados do robô
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         parameters=[
-            {"robot_description": robot_urdf_final}
+            {"robot_description": robot_urdf_content},
+            {"use_sim_time": use_sim_time},
         ],
     )
 
-    # ------------------------------------------------------
-    # Preparação do sistema de controle das rodas do robô
-    # ------------------------------------------------------
-
-    # Inicialização do sistema de controle das juntas do robo
-    # leitura do estado delas...
-    load_joint_state_controller = ExecuteProcess(
-        name="activate_joint_state_broadcaster",
-        cmd=[
-            "ros2",
-            "control",
-            "load_controller",
-            "--set-state",
-            "active",
-            "joint_state_broadcaster",
+    # Spawn do robô no Gazebo
+    spawn_entity_node = Node(
+        package="ros_gz_sim",
+        executable="create",
+        output="screen",
+        arguments=[
+            "-name", "prm_robot",
+            "-topic", "robot_description",
+            "-z", "0.4",
+            "-x", LaunchConfiguration("spawn_x"),
+            "-y", LaunchConfiguration("spawn_y"),
         ],
-        shell=False,
+    )
+
+    # Ponte de comunicação ROS <-> Gazebo (CONFIGURAÇÃO EXATA DO ORIGINAL)
+    bridge_node = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="ros_gz_bridge_prm_robot",
+        arguments=[
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            # Tópicos da câmera restaurados para os do arquivo original
+            "/robot_cam/colored_map@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/robot_cam/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",            
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            "/model/prm_robot/pose@geometry_msgs/msg/Pose[gz.msgs.Pose",
+        ],
+        remappings=[("/model/prm_robot/pose", "/odom_raw")],
         output="screen",
     )
 
-    # Inicialização do sistema de controle das rodas/motores do robo
-    # o controle das rodas depende do estado das juntas
-    start_diff_controller = Node(
+    # Controladores (ros2_control)
+    load_joint_state_broadcaster = ExecuteProcess(
+        cmd=["ros2", "control", "load_controller", "--set-state", "active", "joint_state_broadcaster"],
+        output="screen"
+    )
+
+    start_diff_drive_controller = Node(
         package="controller_manager",
         executable="spawner",
-        name="spawner_diff_drive_base_controller",
         arguments=["diff_drive_base_controller"],
-        parameters=[diff_drive_params],
+        parameters=[controller_params_path],
         output="screen",
     )
 
     start_gripper_controller = Node(
         package="controller_manager",
         executable="spawner",
-        name="spawner_gripper_controller",
         arguments=["gripper_controller"],
-        parameters=[diff_drive_params],
+        parameters=[controller_params_path],
         output="screen",
     )
-
-    # Redireciona as mensagens do topico /diff_drive_base_controller/odom para /odom (Conveniencia)
-    relay_odom = Node(
-        name="relay_odom",
-        package="topic_tools",
-        executable="relay",
-        parameters=[
-            {
-                "input_topic": "/diff_drive_base_controller/odom",
-                "output_topic": "/odom",
-            }
-        ],
-        output="screen",
+    
+    # Nós da Aplicação PRM
+    odom_gt_node = Node(
+        package="prm",
+        executable="ground_truth_odometry",
+        name="odom_gt_publisher",
+        parameters=[{"use_sim_time": use_sim_time}],
     )
 
-    # Redireciona as mensagens do topico /cmd_vel para /diff_drive_base_controller/cmd_vel_unstamped (Conveniencia)
+    robo_mapper_node = Node(
+        package="prm",
+        executable="robo_mapper",
+        name="robo_mapper",
+        parameters=[{"use_sim_time": use_sim_time}],
+    )
+    
+    # Utilitário de redirecionamento de tópico (restaurado do original)
     relay_cmd_vel = Node(
         name="relay_cmd_vel",
         package="topic_tools",
         executable="relay",
-        parameters=[
-            {
-                "input_topic": "/cmd_vel",
-                "output_topic": "/diff_drive_base_controller/cmd_vel_unstamped",
-            }
-        ],
+        parameters=[{
+            "input_topic": "/cmd_vel",
+            "output_topic": "/diff_drive_base_controller/cmd_vel_unstamped",
+        }],
         output="screen",
     )
 
-    # ------------------------------------------------------
-    # RViz: visualização do robô
-    # ------------------------------------------------------
-    # Carrega o arquivo de configuração do RViz a partir do pacote `prm`.
-    rviz_config_file = PathJoinSubstitution([
-        FindPackageShare("prm"),
-        "rviz",
-        "rviz_config.rviz"
-    ])
-
+    # Visualização com RViz
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
+        arguments=["-d", rviz_config_path],
         output="screen",
-        arguments=["-d", rviz_config_file],  # Define o arquivo de configuração a ser carregado
-    )
-
-    # ------------------------------------------------------
-    # Spawn do robô no simulador Gazebo
-    # ------------------------------------------------------
-    # Cria a entidade no mundo simulado utilizando a descrição do robô.
-    spawn_entity = Node(
-        package="ros_gz_sim",
-        executable="create",
-        output="screen",
-        arguments=[
-            "-name", "prm_robot",          # Nome da entidade no simulador
-            "-topic", "robot_description", # Descrição do robô a ser utilizada
-            "-z", "1.0",                   # Altura inicial do robô
-            "-x", "-8.0",                  # Posição no eixo X
-            "-y", "-0.5",                  # Posição no eixo X
-            "--ros-args", "--log-level", "warn"
-        ],
-        parameters=[{"use_sim_time": True}],  # Usa o tempo simulado
+        condition=IfCondition(LaunchConfiguration("launch_rviz")),
     )
     
-    # ------------------------------------------------------
-    # Ponte Gazebo <-> ROS 2 (ros_gz_bridge)
-    # ------------------------------------------------------
-    # Estabelece a comunicação entre os tópicos do Gazebo e os tipos de mensagem do ROS 2.
-    # Sintaxe do bridge: <topico no gazebo>@<tipo do gazebo>@<tipo do ros compativel>
-    bridge = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        name="ros_gz_bridge_prm_robot",
-        arguments=[
-            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-            "/scan@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan",
-            "/imu@sensor_msgs/msg/Imu@ignition.msgs.IMU",
-            # Camera normal
-            # "/robot_cam@sensor_msgs/msg/Image@ignition.msgs.Image",
-            # "/camera_info@sensor_msgs/msg/CameraInfo@ignition.msgs.CameraInfo",
-            # Camera de segmentacao semantica
-            "/robot_cam/labels_map@sensor_msgs/msg/Image@ignition.msgs.Image",
-            "/robot_cam/colored_map@sensor_msgs/msg/Image@ignition.msgs.Image",
-            "/robot_cam/camera_info@sensor_msgs/msg/CameraInfo@ignition.msgs.CameraInfo",            
-            # Camera de detectao bounding box
-            # "/boxes_visible_2d_image@sensor_msgs/msg/Image@ignition.msgs.Image",
-            # "/camera_info@sensor_msgs/msg/CameraInfo@ignition.msgs.CameraInfo",
-            # Mensagem com anotacoes nao e suportado pelo ros_gz_bridge
-            # Necessário para controladores como diff_drive_controller
-            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-            # Ground Truth de Posicao
-            "/model/prm_robot/pose@geometry_msgs/msg/Pose[ignition.msgs.Pose",
-        ],
-        output="screen",
-    )
-
-#  Nodo que publica odometria ground truth
-    odom_gt= Node(
-        package="prm",
-        executable="ground_truth_odometry",
-        name="odom_gt",
-        arguments="",
-        output="screen",
-    )
-
-#  Nodo que publica o mapa
-    robo_mapper= Node(
-        package="prm",
-        executable="robo_mapper",
-        name="robo_mapper",
-        arguments="",
-        output="screen",
-    )
-
-#  Casos vocês queiram carregar o controle do robô junto:
-#  Não esquecer de descomentar a linha no LaunchDescription
-#    controle= Node(
-#        package="prm",
-#        executable="controle_robo",
-#        name="controle_do_robo",
-#        arguments="",
-#        output="screen",
-#    )
-
-    # ------------------------------------------------------
-    # Definição da descrição completa do lançamento
-    # ------------------------------------------------------
-    # Inclui todos os nós definidos acima no lançamento.
-    return LaunchDescription([
-        bridge,
+    # --- 4. ORDEM DE EXECUÇÃO E EVENTOS ---
+    return LaunchDescription(declared_arguments + [
+        # Nós que podem iniciar em paralelo
+        bridge_node,
         robot_state_publisher_node,
-        spawn_entity,
-        RegisterEventHandler(
-            event_handler=OnProcessExit(  
-                target_action=spawn_entity,  # Após carregar o robo no simulador
-                on_exit=[load_joint_state_controller], # Carrega o sistema de leitura das juntas
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller, # Após carregar o sistema de leitura das juntas
-                on_exit=[start_diff_controller], # Carrega o sistema de controle das rodas/motores
-            )
-        ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=start_diff_controller,
-                on_exit=[start_gripper_controller],
-            )
-        ),        
-        odom_gt,
-        robo_mapper,
+        spawn_entity_node,
+        odom_gt_node,
+        robo_mapper_node,
+        relay_cmd_vel,
         rviz_node,
-  #      relay_odom, # Nodos de redirecionamento de mensagens (Estamos usando apenas odom_gt agora)
-        relay_cmd_vel # Nodos de redirecionamento de mensagens
-  #      controle
+        
+        # Handlers que garantem a sequência correta de carregamento dos controladores
+        RegisterEventHandler(
+            event_handler=OnProcessExit(target_action=spawn_entity_node, on_exit=[load_joint_state_broadcaster]),
+        ),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(target_action=load_joint_state_broadcaster, on_exit=[start_diff_drive_controller]),
+        ),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(target_action=start_diff_drive_controller, on_exit=[start_gripper_controller]),
+        ),
     ])

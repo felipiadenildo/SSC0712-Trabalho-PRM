@@ -48,6 +48,8 @@ RUN apt-get update && apt-get install -y \
     # Ao final, limpa o cache do apt para reduzir o tamanho final da imagem Docker.
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install --no-cache-dir "numpy<2.0" "opencv-python~=4.8.0"
+
 # Inicializa o rosdep a nível de sistema (como root).
 # O '|| true' é um mecanismo de segurança para ignorar o erro caso o rosdep
 # já tenha sido inicializado na imagem base, evitando que a construção falhe.
